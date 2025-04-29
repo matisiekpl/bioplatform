@@ -1,0 +1,39 @@
+Write Django application that manages biological labolatory measurements.
+There should be following models:
+
+User:
+- id
+- name
+- email
+- password
+
+Membership:
+- user_id
+- team_id
+- role (enum: VIEWER, EDITOR, ADMIN)
+
+Team:
+- id
+- name
+- description
+
+Experiment:
+- id
+- description
+- type (enum with currently single value: CELL_LINE)
+- team_id
+
+Measurement:
+- id
+- type (enum with values CELL_COUNT, ADHESION_RATE)
+- value
+- timestamp
+- created_by
+
+
+Design entire application with views such as:
+- login
+- register
+- team CRUD (only role=ADMIN can edit members of team)
+- experiment CRUD
+- measurement CRUD
