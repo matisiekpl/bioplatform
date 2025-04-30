@@ -20,6 +20,20 @@
     </a>
 </div>
 
+<div class="mb-6">
+    <form method="get" class="flex items-center">
+        <label for="type-selector" class="block text-sm font-medium text-gray-700 mr-3">Filter by Type:</label>
+        <select id="type-selector" name="type" onchange="this.form.submit()" 
+                class="mt-1 block w-48 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            {% for type_value, type_label in measurement_types %}
+            <option value="{{ type_value }}" {% if selected_type == type_value %}selected{% endif %}>
+                {{ type_label }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
 <div class="bg-white shadow overflow-hidden sm:rounded-md">
     <ul class="divide-y divide-gray-200">
         {% for measurement in measurements %}

@@ -224,13 +224,34 @@ class MeasurementListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         experiment_id = self.kwargs.get('experiment_id')
-        return Measurement.objects.filter(experiment_id=experiment_id)
+        measurement_type = self.request.GET.get('type')
+        
+        queryset = Measurement.objects.filter(experiment_id=experiment_id).order_by('-timestamp')
+        
+        if measurement_type:
+            queryset = queryset.filter(type=measurement_type)
+        elif Measurement.objects.filter(experiment_id=experiment_id).exists():
+            # Default to first measurement type if no type is specified and measurements exist
+            first_measurement = Measurement.objects.filter(experiment_id=experiment_id).first()
+            if first_measurement:
+                queryset = queryset.filter(type=first_measurement.type)
+        
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         experiment = Experiment.objects.get(id=self.kwargs.get('experiment_id'))
         context['experiment'] = experiment
         context['team'] = experiment.team
+        
+        # Add measurement types for the selector
+        context['measurement_types'] = Measurement.Type.choices
+        context['selected_type'] = self.request.GET.get('type', '')
+        
+        # If no type is selected but measurements exist, select the first type
+        if not context['selected_type'] and self.get_queryset().exists():
+            context['selected_type'] = self.get_queryset().first().type
+            
         return context
 
 
