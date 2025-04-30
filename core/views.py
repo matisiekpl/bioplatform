@@ -10,6 +10,54 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserRegistrationForm, TeamForm, MembershipForm, ExperimentForm, MeasurementForm
 
 
+class TeamRoleRequiredMixin(UserPassesTestMixin):
+    required_role = None
+    
+    def test_func(self):
+        # Get the team_id either from kwargs or from the object
+        if hasattr(self, 'get_object'):
+            try:
+                obj = self.get_object()
+                if hasattr(obj, 'team_id'):
+                    team_id = obj.team_id
+                elif hasattr(obj, 'team'):
+                    team_id = obj.team.id
+                elif hasattr(obj, 'experiment') and hasattr(obj.experiment, 'team'):
+                    team_id = obj.experiment.team.id
+                else:
+                    return False
+            except:
+                # If we can't get the object (e.g., in CreateView), try from kwargs
+                team_id = self.kwargs.get('team_id')
+                if not team_id and 'experiment_id' in self.kwargs:
+                    experiment = get_object_or_404(Experiment, id=self.kwargs['experiment_id'])
+                    team_id = experiment.team_id
+        else:
+            team_id = self.kwargs.get('team_id')
+            if not team_id and 'experiment_id' in self.kwargs:
+                experiment = get_object_or_404(Experiment, id=self.kwargs['experiment_id'])
+                team_id = experiment.team_id
+                
+        if not team_id:
+            return False
+            
+        membership = Membership.objects.filter(
+            user=self.request.user,
+            team_id=team_id
+        ).first()
+        
+        if not membership:
+            return False
+            
+        if self.required_role == Membership.Role.EDITOR:
+            return membership.role in [Membership.Role.EDITOR, Membership.Role.ADMIN]
+        elif self.required_role == Membership.Role.ADMIN:
+            return membership.role == Membership.Role.ADMIN
+        
+        # By default, always allow (for viewer or when no specific role is required)
+        return True
+
+
 def register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
@@ -179,13 +227,22 @@ class ExperimentListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['team'] = Team.objects.get(id=self.kwargs.get('team_id'))
+        
+        # Add user's role to context for template permission checks
+        membership = Membership.objects.filter(
+            user=self.request.user,
+            team_id=self.kwargs.get('team_id')
+        ).first()
+        context['user_role'] = membership.role if membership else None
+        
         return context
 
 
-class ExperimentCreateView(LoginRequiredMixin, CreateView):
+class ExperimentCreateView(LoginRequiredMixin, TeamRoleRequiredMixin, CreateView):
     model = Experiment
     form_class = ExperimentForm
     template_name = 'core/experiments/experiment_form.html'
+    required_role = Membership.Role.EDITOR
 
     def form_valid(self, form):
         form.instance.team_id = self.kwargs.get('team_id')
@@ -200,18 +257,20 @@ class ExperimentCreateView(LoginRequiredMixin, CreateView):
         return reverse('experiment_list', kwargs={'team_id': self.kwargs.get('team_id')})
 
 
-class ExperimentUpdateView(LoginRequiredMixin, UpdateView):
+class ExperimentUpdateView(LoginRequiredMixin, TeamRoleRequiredMixin, UpdateView):
     model = Experiment
     form_class = ExperimentForm
     template_name = 'core/experiments/experiment_form.html'
+    required_role = Membership.Role.EDITOR
 
     def get_success_url(self):
         return reverse('experiment_list', kwargs={'team_id': self.object.team_id})
 
 
-class ExperimentDeleteView(LoginRequiredMixin, DeleteView):
+class ExperimentDeleteView(LoginRequiredMixin, TeamRoleRequiredMixin, DeleteView):
     model = Experiment
     template_name = 'core/experiments/experiment_confirm_delete.html'
+    required_role = Membership.Role.EDITOR
 
     def get_success_url(self):
         return reverse('experiment_list', kwargs={'team_id': self.object.team_id})
@@ -244,6 +303,13 @@ class MeasurementListView(LoginRequiredMixin, ListView):
         context['experiment'] = experiment
         context['team'] = experiment.team
         
+        # Add user's role to context for template permission checks
+        membership = Membership.objects.filter(
+            user=self.request.user,
+            team_id=experiment.team_id
+        ).first()
+        context['user_role'] = membership.role if membership else None
+        
         # Add measurement types for the selector
         context['measurement_types'] = Measurement.Type.choices
         context['selected_type'] = self.request.GET.get('type', '')
@@ -255,10 +321,11 @@ class MeasurementListView(LoginRequiredMixin, ListView):
         return context
 
 
-class MeasurementCreateView(LoginRequiredMixin, CreateView):
+class MeasurementCreateView(LoginRequiredMixin, TeamRoleRequiredMixin, CreateView):
     model = Measurement
     form_class = MeasurementForm
     template_name = 'core/measurements/measurement_form.html'
+    required_role = Membership.Role.EDITOR
 
     def form_valid(self, form):
         form.instance.experiment_id = self.kwargs.get('experiment_id')
@@ -276,10 +343,11 @@ class MeasurementCreateView(LoginRequiredMixin, CreateView):
         return reverse('measurement_list', kwargs={'experiment_id': self.kwargs.get('experiment_id')})
 
 
-class MeasurementUpdateView(LoginRequiredMixin, UpdateView):
+class MeasurementUpdateView(LoginRequiredMixin, TeamRoleRequiredMixin, UpdateView):
     model = Measurement
     form_class = MeasurementForm
     template_name = 'core/measurements/measurement_form.html'
+    required_role = Membership.Role.EDITOR
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -291,9 +359,10 @@ class MeasurementUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('measurement_list', kwargs={'experiment_id': self.object.experiment_id})
 
 
-class MeasurementDeleteView(LoginRequiredMixin, DeleteView):
+class MeasurementDeleteView(LoginRequiredMixin, TeamRoleRequiredMixin, DeleteView):
     model = Measurement
     template_name = 'core/measurements/measurement_confirm_delete.html'
+    required_role = Membership.Role.EDITOR
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

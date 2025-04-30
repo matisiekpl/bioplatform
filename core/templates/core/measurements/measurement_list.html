@@ -17,10 +17,12 @@
 
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Measurements for {{ experiment.name }}</h1>
+    {% if user_role != 'VIEWER' %}
     <a href="{% url 'measurement_create' experiment_id=experiment.id %}"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         Add Measurement
     </a>
+    {% endif %}
 </div>
 
 <div class="mb-6">
@@ -64,6 +66,7 @@
                         </div>
                         {% endif %}
                     </div>
+                    {% if user_role != 'VIEWER' %}
                     <div class="ml-4 flex-shrink-0 flex space-x-4">
                         <a href="{% url 'measurement_update' pk=measurement.id %}" class="text-indigo-600 hover:text-indigo-900">
                             Edit
@@ -72,6 +75,7 @@
                             Delete
                         </a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </li>
@@ -115,7 +119,7 @@
                 data: {
                     labels: timestamps,
                     datasets: [{
-                        label: {% if measurements.0 %}'{{ measurements.0.get_type_display }}'{% else %}'Measurement'{% endif %},
+                        label: {% if measurements.0 %}"{{ measurements.0.get_type_display }}"{% else %}"Measurement"{% endif %},
                         data: values,
                         backgroundColor: 'rgba(79, 70, 229, 0.2)',
                         borderColor: 'rgba(79, 70, 229, 1)',

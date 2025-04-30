@@ -13,10 +13,12 @@
 
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Experiments for {{ team.name }}</h1>
+    {% if user_role != 'VIEWER' %}
     <a href="{% url 'experiment_create' team_id=team.id %}"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         Create Experiment
     </a>
+    {% endif %}
 </div>
 
 <div class="bg-white shadow overflow-hidden sm:rounded-md">
@@ -42,12 +44,14 @@
                         <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
                             Measurements
                         </a>
+                        {% if user_role != 'VIEWER' %}
                         <a href="{% url 'experiment_update' pk=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
                             Edit
                         </a>
                         <a href="{% url 'experiment_delete' pk=experiment.id %}" class="text-red-600 hover:text-red-900">
                             Delete
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
