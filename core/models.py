@@ -1,0 +1,41 @@
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinLengthValidator
+
+
+class User(AbstractUser):
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128, validators=[MinLengthValidator(8)])
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "name"]
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Membership(models.Model):
+    class Role(models.TextChoices):
+        VIEWER = "VIEWER", "Viewer"
+        EDITOR = "EDITOR", "Editor"
+        ADMIN = "ADMIN", "Admin"
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="memberships")
+    role = models.CharField(max_length=10, choices=Role.choices, default=Role.VIEWER)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("user", "team")
+
+    def __str__(self):
+        return f"{self.user.name} - {self.team.name} ({self.role})"

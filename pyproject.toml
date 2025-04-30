@@ -7,4 +7,5 @@ requires-python = ">=3.8"
 dependencies = [
     "awsebcli>=3.23.2",
     "django>=4.2.20",
+    "django-auth>=0.1.9",
 ]

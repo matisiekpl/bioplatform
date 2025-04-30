@@ -74,12 +74,14 @@ dependencies = [
     { name = "awsebcli" },
     { name = "django", version = "4.2.20", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "django", version = "5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "django-auth" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "awsebcli", specifier = ">=3.23.2" },
     { name = "django", specifier = ">=4.2.20" },
+    { name = "django-auth", specifier = ">=0.1.9" },
 ]
 
 [[package]]
@@ -278,6 +280,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/4c/1b/c6da718c65228eb3a7ff7ba6a32d8e80fa840ca9057490504e099e4dd1ef/Django-5.2.tar.gz", hash = "sha256:1a47f7a7a3d43ce64570d350e008d2949abe8c7e21737b351b6a1611277c6d89", size = 10824891 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/63/e0/6a5b5ea350c5bd63fe94b05e4c146c18facb51229d9dee42aa39f9fc2214/Django-5.2-py3-none-any.whl", hash = "sha256:91ceed4e3a6db5aedced65e3c8f963118ea9ba753fc620831c77074e620e7d83", size = 8301361 },
+]
+
+[[package]]
+name = "django-auth"
+version = "0.1.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django", version = "4.2.20", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "django", version = "5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/45/5b/209271e185332bb7ad0e88337fcaee0e7c81809d92cc263cdc8ea11a010d/django-auth-0.1.9.tar.gz", hash = "sha256:72d8342b2396af78a4dfdd42eb5a3c7b6e3a875209f700fc4360c9228a67449a", size = 368010 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/43/94/f455a48f56e6434c9b6c07e21feadc5d99b2770a5b2e399bbad08ec3bf6b/django_auth-0.1.9-py3-none-any.whl", hash = "sha256:3595842d875388844a49dc1ffa0ea3059c2c399df91f787b1e4a7dd41a55d652", size = 383504 },
 ]
 
 [[package]]
