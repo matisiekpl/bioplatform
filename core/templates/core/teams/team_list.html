@@ -19,7 +19,9 @@
                 <div class="flex items-center justify-between">
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-indigo-600 truncate">
-                            {{ team.name }}
+                            <a href="{% url 'experiment_list' team_id=team.pk %}" class="hover:underline">
+                                {{ team.name }}
+                            </a>
                         </p>
                         <p class="mt-1 text-sm text-gray-500">
                             {{ team.description|truncatechars:100 }}
