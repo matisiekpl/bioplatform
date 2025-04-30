@@ -34,6 +34,14 @@
     </form>
 </div>
 
+<!-- Chart section -->
+<div class="bg-white shadow overflow-hidden sm:rounded-lg p-6 mb-6">
+    <h2 class="text-lg font-medium text-gray-900 mb-4">Measurement Values Over Time</h2>
+    <div style="height: 300px;">
+        <canvas id="measurementChart"></canvas>
+    </div>
+</div>
+
 <div class="bg-white shadow overflow-hidden sm:rounded-md">
     <ul class="divide-y divide-gray-200">
         {% for measurement in measurements %}
@@ -66,4 +74,89 @@
         {% endfor %}
     </ul>
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart initialization -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('measurementChart').getContext('2d');
+        
+        // Prepare data for chart
+        let timestamps = [
+            {% for m in measurements %}
+                "{{ m.timestamp|date:'Y-m-d H:i' }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        let values = [
+            {% for m in measurements %}
+                {{ m.value }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        // Reverse the arrays to have older values on the left and recent on the right
+        timestamps.reverse();
+        values.reverse();
+        
+        // Create chart if we have data
+        if (timestamps.length > 0) {
+            const measurementChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        label: {% if measurements.0 %}'{{ measurements.0.get_type_display }}'{% else %}'Measurement'{% endif %},
+                        data: values,
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'rgba(79, 70, 229, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Value'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            // Show a message when no data is available
+            const noDataMessage = document.createElement('div');
+            noDataMessage.textContent = 'No measurement data available for chart';
+            noDataMessage.className = 'text-gray-500 text-center py-16';
+            document.querySelector('#measurementChart').parentNode.replaceChild(noDataMessage, document.querySelector('#measurementChart'));
+        }
+    });
+</script>
 {% endblock %} 
