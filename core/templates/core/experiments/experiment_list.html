@@ -3,6 +3,14 @@
 {% block title %}Experiments - BioPlatform{% endblock %}
 
 {% block content %}
+<div class="mb-6 flex items-center text-sm">
+    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+    <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+    <span class="font-medium text-gray-900">{{ team.name }}</span>
+</div>
+
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Experiments for {{ team.name }}</h1>
     <a href="{% url 'experiment_create' team_id=team.id %}"
@@ -18,8 +26,10 @@
             <div class="px-4 py-4 sm:px-6">
                 <div class="flex items-center justify-between">
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-indigo-600 truncate">
-                            {{ experiment.name }}
+                        <p class="text-sm font-medium truncate">
+                            <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
+                                {{ experiment.name }}
+                            </a>
                         </p>
                         <p class="mt-1 text-sm text-gray-500">
                             {{ experiment.description|truncatechars:100 }}
