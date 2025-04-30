@@ -169,7 +169,7 @@ def update_member_role(request, team_pk, membership_pk):
 
 class ExperimentListView(LoginRequiredMixin, ListView):
     model = Experiment
-    template_name = 'core/experiment_list.html'
+    template_name = 'core/experiments/experiment_list.html'
     context_object_name = 'experiments'
 
     def get_queryset(self):
@@ -185,7 +185,7 @@ class ExperimentListView(LoginRequiredMixin, ListView):
 class ExperimentCreateView(LoginRequiredMixin, CreateView):
     model = Experiment
     form_class = ExperimentForm
-    template_name = 'core/experiment_form.html'
+    template_name = 'core/experiments/experiment_form.html'
 
     def form_valid(self, form):
         form.instance.team_id = self.kwargs.get('team_id')
@@ -203,7 +203,7 @@ class ExperimentCreateView(LoginRequiredMixin, CreateView):
 class ExperimentUpdateView(LoginRequiredMixin, UpdateView):
     model = Experiment
     form_class = ExperimentForm
-    template_name = 'core/experiment_form.html'
+    template_name = 'core/experiments/experiment_form.html'
 
     def get_success_url(self):
         return reverse('experiment_list', kwargs={'team_id': self.object.team_id})
@@ -211,7 +211,7 @@ class ExperimentUpdateView(LoginRequiredMixin, UpdateView):
 
 class ExperimentDeleteView(LoginRequiredMixin, DeleteView):
     model = Experiment
-    template_name = 'core/experiment_confirm_delete.html'
+    template_name = 'core/experiments/experiment_confirm_delete.html'
 
     def get_success_url(self):
         return reverse('experiment_list', kwargs={'team_id': self.object.team_id})
