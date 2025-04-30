@@ -19,7 +19,7 @@ def register(request):
             return redirect("team_list")
     else:
         form = UserRegistrationForm()
-    return render(request, "core/register.html", {"form": form})
+    return render(request, "core/auth/register.html", {"form": form})
 
 
 def login_view(request):
@@ -31,7 +31,7 @@ def login_view(request):
             return redirect("team_list")
     else:
         form = AuthenticationForm()
-    return render(request, "core/login.html", {"form": form})
+    return render(request, "core/auth/login.html", {"form": form})
 
 
 def logout_view(request):
@@ -41,7 +41,7 @@ def logout_view(request):
 
 class TeamListView(LoginRequiredMixin, ListView):
     model = Team
-    template_name = "core/team_list.html"
+    template_name = "core/teams/team_list.html"
     context_object_name = "teams"
 
     def get_queryset(self):
@@ -51,7 +51,7 @@ class TeamListView(LoginRequiredMixin, ListView):
 class TeamCreateView(LoginRequiredMixin, CreateView):
     model = Team
     form_class = TeamForm
-    template_name = "core/team_form.html"
+    template_name = "core/teams/team_form.html"
     success_url = reverse_lazy("team_list")
 
     def form_valid(self, form):
@@ -65,7 +65,7 @@ class TeamCreateView(LoginRequiredMixin, CreateView):
 class TeamUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Team
     form_class = TeamForm
-    template_name = "core/team_form.html"
+    template_name = "core/teams/team_form.html"
     success_url = reverse_lazy("team_list")
 
     def test_func(self):
@@ -77,7 +77,7 @@ class TeamUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class TeamDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Team
-    template_name = "core/team_confirm_delete.html"
+    template_name = "core/teams/team_confirm_delete.html"
     success_url = reverse_lazy("team_list")
 
     def test_func(self):
@@ -112,7 +112,7 @@ def team_members(request, pk):
     memberships = Membership.objects.filter(team=team)
     return render(
         request,
-        "core/team_members.html",
+        "core/teams/team_members.html",
         {"team": team, "memberships": memberships, "form": form, "is_admin": True},
     )
 
