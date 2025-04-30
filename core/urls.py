@@ -24,4 +24,8 @@ urlpatterns = [
     path('teams/<int:team_id>/experiments/create/', views.ExperimentCreateView.as_view(), name='experiment_create'),
     path('experiments/<int:pk>/update/', views.ExperimentUpdateView.as_view(), name='experiment_update'),
     path('experiments/<int:pk>/delete/', views.ExperimentDeleteView.as_view(), name='experiment_delete'),
+    path('experiments/<int:experiment_id>/measurements/', views.MeasurementListView.as_view(), name='measurement_list'),
+    path('experiments/<int:experiment_id>/measurements/create/', views.MeasurementCreateView.as_view(), name='measurement_create'),
+    path('measurements/<int:pk>/update/', views.MeasurementUpdateView.as_view(), name='measurement_update'),
+    path('measurements/<int:pk>/delete/', views.MeasurementDeleteView.as_view(), name='measurement_delete'),
 ]

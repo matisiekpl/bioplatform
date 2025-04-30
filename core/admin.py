@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Team, Membership
+from .models import User, Team, Membership, Experiment, Measurement
 
 
 @admin.register(User)
@@ -47,3 +47,7 @@ class MembershipAdmin(admin.ModelAdmin):
     list_display = ("user", "team", "role")
     list_filter = ("role",)
     search_fields = ("user__name", "user__email", "team__name")
+
+
+admin.site.register(Experiment)
+admin.site.register(Measurement)

@@ -29,6 +29,9 @@
                         </p>
                     </div>
                     <div class="ml-4 flex-shrink-0 flex space-x-4">
+                        <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
+                            Measurements
+                        </a>
                         <a href="{% url 'experiment_update' pk=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
                             Edit
                         </a>

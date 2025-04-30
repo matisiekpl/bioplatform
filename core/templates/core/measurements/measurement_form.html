@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+{% if form.instance.pk %}
+Edit Measurement - {{ form.instance.get_type_display }}
+{% else %}
+Add Measurement - {{ experiment.name }}
+{% endif %}
+- BioPlatform
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center mb-4">
+    <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="text-indigo-600 hover:text-indigo-900 mr-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 inline">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Measurements
+    </a>
+</div>
+
+<div class="bg-white shadow overflow-hidden sm:rounded-lg p-6">
+    <div class="pb-5 border-b border-gray-200">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+            {% if form.instance.pk %}
+            Edit Measurement
+            {% else %}
+            Add New Measurement
+            {% endif %}
+        </h3>
+        <p class="mt-1 text-sm text-gray-500">
+            {% if form.instance.pk %}
+            Update the measurement details.
+            {% else %}
+            Enter measurement details for {{ experiment.name }}.
+            {% endif %}
+        </p>
+    </div>
+
+    <form method="post" class="mt-6 space-y-6">
+        {% csrf_token %}
+        
+        <div>
+            <label for="{{ form.type.id_for_label }}" class="block text-sm font-medium text-gray-700">Measurement Type</label>
+            {{ form.type }}
+            {% if form.type.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ form.type.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="{{ form.value.id_for_label }}" class="block text-sm font-medium text-gray-700">Value</label>
+            {{ form.value }}
+            {% if form.value.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ form.value.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="{{ form.timestamp.id_for_label }}" class="block text-sm font-medium text-gray-700">Timestamp</label>
+            {{ form.timestamp }}
+            {% if form.timestamp.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ form.timestamp.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="flex justify-end">
+            <a href="{% url 'measurement_list' experiment_id=experiment.id %}" 
+                class="mr-3 bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Cancel
+            </a>
+            <button type="submit"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                {% if form.instance.pk %}Update{% else %}Save{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %} 

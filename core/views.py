@@ -5,9 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
-from .models import Team, Membership, Experiment
+from .models import Team, Membership, Experiment, Measurement
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegistrationForm, TeamForm, MembershipForm, ExperimentForm
+from .forms import UserRegistrationForm, TeamForm, MembershipForm, ExperimentForm, MeasurementForm
 
 
 def register(request):
@@ -215,3 +215,70 @@ class ExperimentDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('experiment_list', kwargs={'team_id': self.object.team_id})
+
+
+class MeasurementListView(LoginRequiredMixin, ListView):
+    model = Measurement
+    template_name = 'core/measurements/measurement_list.html'
+    context_object_name = 'measurements'
+
+    def get_queryset(self):
+        experiment_id = self.kwargs.get('experiment_id')
+        return Measurement.objects.filter(experiment_id=experiment_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        experiment = Experiment.objects.get(id=self.kwargs.get('experiment_id'))
+        context['experiment'] = experiment
+        context['team'] = experiment.team
+        return context
+
+
+class MeasurementCreateView(LoginRequiredMixin, CreateView):
+    model = Measurement
+    form_class = MeasurementForm
+    template_name = 'core/measurements/measurement_form.html'
+
+    def form_valid(self, form):
+        form.instance.experiment_id = self.kwargs.get('experiment_id')
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        experiment = Experiment.objects.get(id=self.kwargs.get('experiment_id'))
+        context['experiment'] = experiment
+        context['team'] = experiment.team
+        return context
+
+    def get_success_url(self):
+        return reverse('measurement_list', kwargs={'experiment_id': self.kwargs.get('experiment_id')})
+
+
+class MeasurementUpdateView(LoginRequiredMixin, UpdateView):
+    model = Measurement
+    form_class = MeasurementForm
+    template_name = 'core/measurements/measurement_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['experiment'] = self.object.experiment
+        context['team'] = self.object.experiment.team
+        return context
+
+    def get_success_url(self):
+        return reverse('measurement_list', kwargs={'experiment_id': self.object.experiment_id})
+
+
+class MeasurementDeleteView(LoginRequiredMixin, DeleteView):
+    model = Measurement
+    template_name = 'core/measurements/measurement_confirm_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['experiment'] = self.object.experiment
+        context['team'] = self.object.experiment.team
+        return context
+
+    def get_success_url(self):
+        return reverse('measurement_list', kwargs={'experiment_id': self.object.experiment_id})
