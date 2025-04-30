@@ -3,11 +3,11 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
-from .models import Team, Membership
+from .models import Team, Membership, Experiment
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserRegistrationForm, TeamForm, MembershipForm
+from .forms import UserRegistrationForm, TeamForm, MembershipForm, ExperimentForm
 
 
 def register(request):
@@ -165,3 +165,53 @@ def update_member_role(request, team_pk, membership_pk):
     membership.role = new_role
     membership.save()
     return redirect("team_members", pk=team_pk)
+
+
+class ExperimentListView(LoginRequiredMixin, ListView):
+    model = Experiment
+    template_name = 'core/experiment_list.html'
+    context_object_name = 'experiments'
+
+    def get_queryset(self):
+        team_id = self.kwargs.get('team_id')
+        return Experiment.objects.filter(team_id=team_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['team'] = Team.objects.get(id=self.kwargs.get('team_id'))
+        return context
+
+
+class ExperimentCreateView(LoginRequiredMixin, CreateView):
+    model = Experiment
+    form_class = ExperimentForm
+    template_name = 'core/experiment_form.html'
+
+    def form_valid(self, form):
+        form.instance.team_id = self.kwargs.get('team_id')
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['team_id'] = self.kwargs.get('team_id')
+        return context
+
+    def get_success_url(self):
+        return reverse('experiment_list', kwargs={'team_id': self.kwargs.get('team_id')})
+
+
+class ExperimentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Experiment
+    form_class = ExperimentForm
+    template_name = 'core/experiment_form.html'
+
+    def get_success_url(self):
+        return reverse('experiment_list', kwargs={'team_id': self.object.team_id})
+
+
+class ExperimentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Experiment
+    template_name = 'core/experiment_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('experiment_list', kwargs={'team_id': self.object.team_id})

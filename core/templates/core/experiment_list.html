@@ -1,54 +1,49 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Teams - BioPlatform{% endblock %}
+{% block title %}Experiments - BioPlatform{% endblock %}
 
 {% block content %}
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Teams</h1>
-    <a href="{% url 'team_create' %}"
+    <h1 class="text-2xl font-bold text-gray-900">Experiments for {{ team.name }}</h1>
+    <a href="{% url 'experiment_create' team_id=team.id %}"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Create Team
+        Create Experiment
     </a>
 </div>
 
 <div class="bg-white shadow overflow-hidden sm:rounded-md">
     <ul class="divide-y divide-gray-200">
-        {% for team in teams %}
+        {% for experiment in experiments %}
         <li>
             <div class="px-4 py-4 sm:px-6">
                 <div class="flex items-center justify-between">
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-indigo-600 truncate">
-                            {{ team.name }}
+                            {{ experiment.name }}
                         </p>
                         <p class="mt-1 text-sm text-gray-500">
-                            {{ team.description|truncatechars:100 }}
+                            {{ experiment.description|truncatechars:100 }}
+                        </p>
+                        <p class="mt-1 text-xs text-gray-400">
+                            Type: {{ experiment.get_type_display }} | Created: {{ experiment.created_at|date:"F j, Y" }}
                         </p>
                     </div>
                     <div class="ml-4 flex-shrink-0 flex space-x-4">
-                        <a href="{% url 'team_members' team.pk %}" class="text-indigo-600 hover:text-indigo-900">
-                            Members
-                        </a>
-                        <a href="{% url 'experiment_list' team_id=team.pk %}" class="text-indigo-600 hover:text-indigo-900">
-                            Experiments
-                        </a>
-                        {% if team.memberships.get.role == 'ADMIN' %}
-                        <a href="{% url 'team_update' team.pk %}" class="text-indigo-600 hover:text-indigo-900">
+                        <a href="{% url 'experiment_update' pk=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
                             Edit
                         </a>
-                        <a href="{% url 'team_delete' team.pk %}" class="text-red-600 hover:text-red-900">
+                        <a href="{% url 'experiment_delete' pk=experiment.id %}" class="text-red-600 hover:text-red-900">
                             Delete
                         </a>
-                        {% endif %}
                     </div>
                 </div>
             </div>
         </li>
         {% empty %}
         <li class="px-4 py-4 sm:px-6">
-            <p class="text-gray-500">No teams found. Create your first team!</p>
+            <p class="text-gray-500">No experiments found. Create your first experiment!</p>
         </li>
         {% endfor %}
     </ul>
 </div>
-{% endblock %}
+{% endblock %} 

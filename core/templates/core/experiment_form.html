@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}Create{% endif %} Experiment - BioPlatform{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="md:flex md:items-center md:justify-between md:space-x-5 mb-6">
+        <div class="flex-1 min-w-0">
+            <h1 class="text-2xl font-bold text-gray-900">{% if object %}Edit{% else %}Create{% endif %} Experiment</h1>
+        </div>
+    </div>
+    
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                    <div class="sm:col-span-6">
+                        <label for="id_name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <div class="mt-1">
+                            {{ form.name }}
+                        </div>
+                    </div>
+                    
+                    <div class="sm:col-span-6">
+                        <label for="id_type" class="block text-sm font-medium text-gray-700">Type</label>
+                        <div class="mt-1">
+                            {{ form.type }}
+                        </div>
+                    </div>
+                    
+                    <div class="sm:col-span-6">
+                        <label for="id_description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <div class="mt-1">
+                            {{ form.description }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex items-center justify-end space-x-3">
+                    {% if object %}
+                    <a href="{% url 'experiment_list' team_id=object.team_id %}" 
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Cancel
+                    </a>
+                    {% elif team_id %}
+                    <a href="{% url 'experiment_list' team_id=team_id %}" 
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Cancel
+                    </a>
+                    {% else %}
+                    <button type="button" onclick="history.back()" 
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Cancel
+                    </button>
+                    {% endif %}
+                    
+                    <button type="submit" 
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

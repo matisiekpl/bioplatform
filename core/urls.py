@@ -20,4 +20,8 @@ urlpatterns = [
         views.update_member_role,
         name="update_member_role",
     ),
+    path('teams/<int:team_id>/experiments/', views.ExperimentListView.as_view(), name='experiment_list'),
+    path('teams/<int:team_id>/experiments/create/', views.ExperimentCreateView.as_view(), name='experiment_create'),
+    path('experiments/<int:pk>/update/', views.ExperimentUpdateView.as_view(), name='experiment_update'),
+    path('experiments/<int:pk>/delete/', views.ExperimentDeleteView.as_view(), name='experiment_delete'),
 ]
