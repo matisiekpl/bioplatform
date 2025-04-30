@@ -40,7 +40,7 @@ Add Measurement - {{ experiment.name }}
         </p>
     </div>
 
-    <form method="post" class="mt-6 space-y-6">
+    <form method="post" class="mt-6 space-y-6" enctype="multipart/form-data">
         {% csrf_token %}
         
         <div>
@@ -64,6 +64,20 @@ Add Measurement - {{ experiment.name }}
             {{ form.timestamp }}
             {% if form.timestamp.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.timestamp.errors }}</p>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">Image</label>
+            {{ form.image }}
+            {% if form.image.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ form.image.errors }}</p>
+            {% endif %}
+            {% if form.instance.image %}
+            <div class="mt-2">
+                <p class="text-sm text-gray-500">Current image:</p>
+                <img src="{{ form.instance.image.url }}" alt="Measurement image" class="mt-2 h-32 object-contain border border-gray-200 rounded-md">
+            </div>
             {% endif %}
         </div>
         

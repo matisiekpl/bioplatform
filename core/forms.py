@@ -59,7 +59,7 @@ class ExperimentForm(forms.ModelForm):
 class MeasurementForm(forms.ModelForm):
     class Meta:
         model = Measurement
-        fields = ['type', 'value', 'timestamp']
+        fields = ['type', 'value', 'timestamp', 'image']
         widgets = {
             'type': forms.Select(attrs={
                 'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
@@ -71,6 +71,10 @@ class MeasurementForm(forms.ModelForm):
             'timestamp': forms.DateTimeInput(attrs={
                 'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
                 'type': 'datetime-local'
+            }),
+            'image': forms.FileInput(attrs={
+                'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
+                'accept': 'image/*'
             }),
         }
     

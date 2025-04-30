@@ -66,6 +66,7 @@ class Measurement(models.Model):
     type = models.CharField(max_length=20, choices=Type.choices)
     value = models.FloatField()
     timestamp = models.DateTimeField()
+    image = models.ImageField(upload_to='measurement_images/', blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="measurements")
     experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, related_name="measurements")
     created_at = models.DateTimeField(auto_now_add=True)

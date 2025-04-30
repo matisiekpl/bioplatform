@@ -58,6 +58,11 @@
                         <p class="mt-1 text-xs text-gray-400">
                             Measured at: {{ measurement.timestamp|date:"F j, Y H:i" }} | Added by: {{ measurement.created_by.name }}
                         </p>
+                        {% if measurement.image %}
+                        <div class="mt-2">
+                            <img src="{{ measurement.image.url }}" alt="Measurement image" class="h-24 object-contain border border-gray-200 rounded-md">
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="ml-4 flex-shrink-0 flex space-x-4">
                         <a href="{% url 'measurement_update' pk=measurement.id %}" class="text-indigo-600 hover:text-indigo-900">

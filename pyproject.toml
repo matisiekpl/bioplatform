@@ -8,4 +8,5 @@ dependencies = [
     "awsebcli>=3.23.2",
     "django>=4.2.20",
     "django-auth>=0.1.9",
+    "pillow>=10.4.0",
 ]
