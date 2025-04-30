@@ -59,6 +59,16 @@ Add Measurement - {{ experiment.name }}
             {% endif %}
         </div>
         
+        <div id="autodetect-container" class="flex items-center mt-2" style="display: none;">
+            <div class="flex h-5 items-center">
+                {{ form.autodetect }}
+            </div>
+            <div class="ml-3 text-sm">
+                <label for="{{ form.autodetect.id_for_label }}" class="font-medium text-gray-700">Autodetect from image</label>
+                <p class="text-gray-500">Automatically calculate cell count from uploaded image</p>
+            </div>
+        </div>
+        
         <div>
             <label for="{{ form.timestamp.id_for_label }}" class="block text-sm font-medium text-gray-700">Timestamp</label>
             {{ form.timestamp }}
@@ -93,4 +103,59 @@ Add Measurement - {{ experiment.name }}
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeSelect = document.getElementById('{{ form.type.id_for_label }}');
+        const autodetectContainer = document.getElementById('autodetect-container');
+        const valueInput = document.getElementById('{{ form.value.id_for_label }}');
+        const autodetectCheckbox = document.getElementById('{{ form.autodetect.id_for_label }}');
+        const form = document.querySelector('form');
+        
+        function updateAutodetectVisibility() {
+            if (typeSelect.value === 'CELL_COUNT') {
+                autodetectContainer.style.display = 'flex';
+            } else {
+                autodetectContainer.style.display = 'none';
+                autodetectCheckbox.checked = false;
+                valueInput.required = true;
+                valueInput.disabled = false;
+                valueInput.placeholder = '';
+            }
+        }
+        
+        typeSelect.addEventListener('change', updateAutodetectVisibility);
+        
+        // Check when autodetect is toggled
+        autodetectCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Make the value field look disabled but still submit with form
+                valueInput.disabled = false;
+                valueInput.readOnly = true;
+                valueInput.value = '0'; // Temporary value for form validation
+                valueInput.placeholder = 'Will be calculated from image';
+                valueInput.style.backgroundColor = '#f3f4f6';
+            } else {
+                valueInput.readOnly = false;
+                valueInput.value = '';
+                valueInput.placeholder = '';
+                valueInput.style.backgroundColor = '';
+            }
+        });
+        
+        form.addEventListener('submit', function(e) {
+            // If autodetect is checked, make sure we have an image
+            if (autodetectCheckbox.checked) {
+                const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+                if (!imageInput.files || imageInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('Please select an image for cell counting');
+                }
+            }
+        });
+        
+        // Initial check on page load
+        updateAutodetectVisibility();
+    });
+</script>
 {% endblock %} 

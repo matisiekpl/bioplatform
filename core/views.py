@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from .models import Team, Membership, Experiment, Measurement
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserRegistrationForm, TeamForm, MembershipForm, ExperimentForm, MeasurementForm
+from .utils import detect_cells_from_image
+from django.contrib import messages
 
 
 class TeamRoleRequiredMixin(UserPassesTestMixin):
@@ -330,6 +332,23 @@ class MeasurementCreateView(LoginRequiredMixin, TeamRoleRequiredMixin, CreateVie
     def form_valid(self, form):
         form.instance.experiment_id = self.kwargs.get('experiment_id')
         form.instance.created_by = self.request.user
+        
+        # If autodetect is checked and it's a CELL_COUNT measurement with an image
+        if (form.cleaned_data.get('autodetect') and 
+            form.instance.type == Measurement.Type.CELL_COUNT):
+            
+            # Ensure there's an image
+            if not form.cleaned_data.get('image'):
+                form.add_error('image', 'An image is required for cell counting with autodetect')
+                return self.form_invalid(form)
+                
+            # Calculate cell count from the uploaded image
+            cell_count = detect_cells_from_image(form.cleaned_data['image'])
+            form.instance.value = cell_count
+            
+            # Add success message
+            messages.success(self.request, f'Successfully detected {cell_count} cells from the image.')
+        
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -348,6 +367,25 @@ class MeasurementUpdateView(LoginRequiredMixin, TeamRoleRequiredMixin, UpdateVie
     form_class = MeasurementForm
     template_name = 'core/measurements/measurement_form.html'
     required_role = Membership.Role.EDITOR
+
+    def form_valid(self, form):
+        # If autodetect is checked and it's a CELL_COUNT measurement with an image
+        if (form.cleaned_data.get('autodetect') and 
+            form.instance.type == Measurement.Type.CELL_COUNT):
+            
+            # Ensure there's an image
+            if not form.cleaned_data.get('image'):
+                form.add_error('image', 'An image is required for cell counting with autodetect')
+                return self.form_invalid(form)
+                
+            # Calculate cell count from the uploaded image
+            cell_count = detect_cells_from_image(form.cleaned_data['image'])
+            form.instance.value = cell_count
+            
+            # Add success message
+            messages.success(self.request, f'Successfully detected {cell_count} cells from the image.')
+            
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
