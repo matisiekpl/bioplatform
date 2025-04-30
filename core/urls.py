@@ -10,4 +10,14 @@ urlpatterns = [
     path("teams/<int:pk>/update/", views.TeamUpdateView.as_view(), name="team_update"),
     path("teams/<int:pk>/delete/", views.TeamDeleteView.as_view(), name="team_delete"),
     path("teams/<int:pk>/members/", views.team_members, name="team_members"),
+    path(
+        "teams/<int:team_pk>/members/<int:membership_pk>/remove/",
+        views.remove_team_member,
+        name="remove_team_member",
+    ),
+    path(
+        "teams/<int:team_pk>/members/<int:membership_pk>/update-role/",
+        views.update_member_role,
+        name="update_member_role",
+    ),
 ]

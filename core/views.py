@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from .models import Team, Membership
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserRegistrationForm, TeamForm, MembershipForm
@@ -112,5 +113,55 @@ def team_members(request, pk):
     return render(
         request,
         "core/team_members.html",
-        {"team": team, "memberships": memberships, "form": form},
+        {"team": team, "memberships": memberships, "form": form, "is_admin": True},
     )
+
+
+@login_required
+def remove_team_member(request, team_pk, membership_pk):
+    team = get_object_or_404(Team, pk=team_pk)
+    if not Membership.objects.filter(
+        user=request.user, team=team, role=Membership.Role.ADMIN
+    ).exists():
+        return JsonResponse({"error": "Permission denied"}, status=403)
+
+    membership = get_object_or_404(Membership, pk=membership_pk, team=team)
+    if (
+        membership.role == Membership.Role.ADMIN
+        and Membership.objects.filter(team=team, role=Membership.Role.ADMIN).count()
+        == 1
+    ):
+        return JsonResponse({"error": "Cannot remove the last admin"}, status=400)
+
+    membership.delete()
+    return redirect("team_members", pk=team_pk)
+
+
+@login_required
+def update_member_role(request, team_pk, membership_pk):
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    team = get_object_or_404(Team, pk=team_pk)
+    if not Membership.objects.filter(
+        user=request.user, team=team, role=Membership.Role.ADMIN
+    ).exists():
+        return JsonResponse({"error": "Permission denied"}, status=403)
+
+    membership = get_object_or_404(Membership, pk=membership_pk, team=team)
+    new_role = request.POST.get("role")
+
+    if new_role not in [role[0] for role in Membership.Role.choices]:
+        return JsonResponse({"error": "Invalid role"}, status=400)
+
+    # Check if this would remove the last admin
+    if membership.role == Membership.Role.ADMIN and new_role != Membership.Role.ADMIN:
+        if (
+            Membership.objects.filter(team=team, role=Membership.Role.ADMIN).count()
+            == 1
+        ):
+            return JsonResponse({"error": "Cannot remove the last admin"}, status=400)
+
+    membership.role = new_role
+    membership.save()
+    return redirect("team_members", pk=team_pk)
