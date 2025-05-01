@@ -1,11 +1,11 @@
 {% extends 'core/base.html' %}
 
-{% block title %}{% if object %}Edit{% else %}Create{% endif %} Experiment - BioPlatform{% endblock %}
+{% block title %}{% if object %}Edycja{% else %}Utwórz{% endif %} eksperyment - BioPlatform{% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto">
     <div class="mb-6 flex items-center text-sm">
-        <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+        <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Zespoły</a>
         <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
@@ -18,7 +18,7 @@
     
     <div class="md:flex md:items-center md:justify-between md:space-x-5 mb-6">
         <div class="flex-1 min-w-0">
-            <h1 class="text-2xl font-bold text-gray-900">{% if object %}Edit{% else %}Create{% endif %} Experiment</h1>
+            <h1 class="text-2xl font-bold text-gray-900">{% if object %}Edycja{% else %}Utwórz{% endif %} eksperyment</h1>
         </div>
     </div>
     
@@ -29,21 +29,21 @@
                 
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div class="sm:col-span-6">
-                        <label for="id_name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <label for="id_name" class="block text-sm font-medium text-gray-700">Nazwa</label>
                         <div class="mt-1">
                             {{ form.name }}
                         </div>
                     </div>
                     
                     <div class="sm:col-span-6">
-                        <label for="id_type" class="block text-sm font-medium text-gray-700">Type</label>
+                        <label for="id_type" class="block text-sm font-medium text-gray-700">Typ</label>
                         <div class="mt-1">
                             {{ form.type }}
                         </div>
                     </div>
                     
                     <div class="sm:col-span-6">
-                        <label for="id_description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <label for="id_description" class="block text-sm font-medium text-gray-700">Opis</label>
                         <div class="mt-1">
                             {{ form.description }}
                         </div>
@@ -54,23 +54,23 @@
                     {% if object %}
                     <a href="{% url 'experiment_list' team_id=object.team_id %}" 
                         class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Cancel
+                        Anuluj
                     </a>
                     {% elif team_id %}
                     <a href="{% url 'experiment_list' team_id=team_id %}" 
                         class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Cancel
+                        Anuluj
                     </a>
                     {% else %}
                     <button type="button" onclick="history.back()" 
                         class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Cancel
+                        Anuluj
                     </button>
                     {% endif %}
                     
                     <button type="submit" 
                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Save
+                        Zapisz
                     </button>
                 </div>
             </form>

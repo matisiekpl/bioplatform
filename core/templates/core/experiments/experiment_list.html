@@ -1,10 +1,10 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Experiments - BioPlatform{% endblock %}
+{% block title %}Eksperymenty - BioPlatform{% endblock %}
 
 {% block content %}
 <div class="mb-6 flex items-center text-sm">
-    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Zespoły</a>
     <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
     </svg>
@@ -12,19 +12,19 @@
     <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
     </svg>
-    <span class="font-medium text-gray-900">Experiments</span>
+    <span class="font-medium text-gray-900">Eksperymenty</span>
 </div>
 
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Experiments for {{ team.name }}</h1>
+    <h1 class="text-2xl font-bold text-gray-900">Eksperymenty dla {{ team.name }}</h1>
     <div class="flex space-x-4">
         <a href="{% url 'team_detail' pk=team.id %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Back to Team
+            Powrót do zespołu
         </a>
         {% if user_role != 'VIEWER' %}
         <a href="{% url 'experiment_create' team_id=team.id %}"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Create Experiment
+            Utwórz eksperyment
         </a>
         {% endif %}
     </div>
@@ -45,20 +45,20 @@
                                 {{ experiment.description|truncatechars:100 }}
                             </p>
                             <p class="mt-1 text-xs text-gray-400">
-                                Type: {{ experiment.get_type_display }} | Created: {{ experiment.created_at|date:"F j, Y" }}
+                                Typ: {{ experiment.get_type_display }} | Utworzony: {{ experiment.created_at|date:"j F Y" }}
                             </p>
                         </a>
                     </div>
                     <div class="ml-4 flex-shrink-0 flex space-x-4">
                         <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
-                            Measurements
+                            Pomiary
                         </a>
                         {% if user_role != 'VIEWER' %}
                         <a href="{% url 'experiment_update' pk=experiment.id %}" class="text-indigo-600 hover:text-indigo-900" onclick="event.stopPropagation();">
-                            Edit
+                            Edytuj
                         </a>
                         <a href="{% url 'experiment_delete' pk=experiment.id %}" class="text-red-600 hover:text-red-900" onclick="event.stopPropagation();">
-                            Delete
+                            Usuń
                         </a>
                         {% endif %}
                     </div>
@@ -67,7 +67,7 @@
         </li>
         {% empty %}
         <li class="px-4 py-4 sm:px-6">
-            <p class="text-gray-500">No experiments found. Create your first experiment!</p>
+            <p class="text-gray-500">Nie znaleziono eksperymentów. Utwórz swój pierwszy eksperyment!</p>
         </li>
         {% endfor %}
     </ul>

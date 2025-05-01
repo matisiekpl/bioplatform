@@ -1,10 +1,10 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Measurements - {{ experiment.name }} - BioPlatform{% endblock %}
+{% block title %}Pomiary - {{ experiment.name }} - BioPlatform{% endblock %}
 
 {% block content %}
 <div class="mb-6 flex items-center text-sm">
-    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Zespoły</a>
     <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
     </svg>
@@ -16,16 +16,16 @@
 </div>
 
 <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Measurements for {{ experiment.name }}</h1>
+    <h1 class="text-2xl font-bold text-gray-900">Pomiary dla {{ experiment.name }}</h1>
     {% if user_role != 'VIEWER' %}
     <div class="flex space-x-3">
         <a href="{% url 'analyze_image_form' experiment_id=experiment.id %}"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            Analyze from Image
+            Analiza ze zdjęcia
         </a>
         <a href="{% url 'measurement_create' experiment_id=experiment.id %}"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Add Measurement
+            Dodaj pomiar
         </a>
     </div>
     {% endif %}
@@ -33,7 +33,7 @@
 
 <div class="mb-6">
     <form method="get" class="flex items-center" id="measurement-type-form">
-        <label for="type-selector" class="block text-sm font-medium text-gray-700 mr-3">Filter by Type:</label>
+        <label for="type-selector" class="block text-sm font-medium text-gray-700 mr-3">Filtruj według typu:</label>
         <select id="type-selector" name="type" onchange="handleTypeChange(this.value)" 
                 class="mt-1 block w-48 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             {% for type_value, type_label in measurement_types %}
@@ -45,9 +45,9 @@
     </form>
 </div>
 
-<!-- Chart section -->
+<!-- Sekcja wykresu -->
 <div class="bg-white shadow overflow-hidden sm:rounded-lg p-6 mb-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Measurement Values Over Time</h2>
+    <h2 class="text-lg font-medium text-gray-900 mb-4">Wartości pomiarów w czasie</h2>
     <div style="height: 300px;">
         <canvas id="measurementChart"></canvas>
     </div>
@@ -64,21 +64,21 @@
                             {{ measurement.get_type_display }} - {{ measurement.value }}
                         </p>
                         <p class="mt-1 text-xs text-gray-400">
-                            Measured at: {{ measurement.timestamp|date:"F j, Y H:i" }} | Added by: {{ measurement.created_by.name }}
+                            Zmierzono: {{ measurement.timestamp|date:"j F Y H:i" }} | Dodane przez: {{ measurement.created_by.name }}
                         </p>
                         {% if measurement.image %}
                         <div class="mt-2">
-                            <img src="{{ measurement.image.url }}" alt="Measurement image" class="h-24 object-contain border border-gray-200 rounded-md">
+                            <img src="{{ measurement.image.url }}" alt="Zdjęcie pomiaru" class="h-24 object-contain border border-gray-200 rounded-md">
                         </div>
                         {% endif %}
                     </div>
                     {% if user_role != 'VIEWER' %}
                     <div class="ml-4 flex-shrink-0 flex space-x-4">
                         <a href="{% url 'measurement_update' pk=measurement.id %}" class="text-indigo-600 hover:text-indigo-900">
-                            Edit
+                            Edytuj
                         </a>
                         <a href="{% url 'measurement_delete' pk=measurement.id %}" class="text-red-600 hover:text-red-900">
-                            Delete
+                            Usuń
                         </a>
                     </div>
                     {% endif %}
@@ -87,7 +87,7 @@
         </li>
         {% empty %}
         <li class="px-4 py-4 sm:px-6">
-            <p class="text-gray-500">No measurements found. Add your first measurement!</p>
+            <p class="text-gray-500">Nie znaleziono pomiarów. Dodaj swój pierwszy pomiar!</p>
         </li>
         {% endfor %}
     </ul>
@@ -97,36 +97,36 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
-<!-- Measurement type storage and chart initialization -->
+<!-- Zapisywanie typu pomiarów i inicjalizacja wykresu -->
 <script>
-    // Function to handle type selection change
+    // Funkcja obsługi zmiany wyboru typu
     function handleTypeChange(value) {
-        // Store the selected type in localStorage
+        // Zapisz wybrany typ w localStorage
         var experimentId = "{{ experiment.id }}";
         var storageKey = "measurement_type_" + experimentId;
         localStorage.setItem(storageKey, value);
         
-        // Submit the form
+        // Wyślij formularz
         document.getElementById('measurement-type-form').submit();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Check if we should restore the type from localStorage
+        // Sprawdź, czy powinniśmy przywrócić typ z localStorage
         var experimentId = "{{ experiment.id }}";
         var storageKey = "measurement_type_" + experimentId;
         var urlParams = new URLSearchParams(window.location.search);
         
-        // If no type is in URL but we have one stored, use the stored type
+        // Jeśli nie ma typu w URL, ale mamy zapisany, użyj zapisanego typu
         if (!urlParams.has('type')) {
             var storedType = localStorage.getItem(storageKey);
             if (storedType) {
                 var typeSelector = document.getElementById('type-selector');
                 typeSelector.value = storedType;
-                // Submit the form to reload with the stored type
+                // Wyślij formularz, aby przeładować z zapisanym typem
                 document.getElementById('measurement-type-form').submit();
             }
         } else {
-            // If type is in URL, store it
+            // Jeśli typ jest w URL, zapisz go
             var currentType = urlParams.get('type');
             if (currentType) {
                 localStorage.setItem(storageKey, currentType);
@@ -135,26 +135,24 @@
         
         var ctx = document.getElementById('measurementChart').getContext('2d');
         
-        // Prepare data for chart
-        var timestampStrings = [
-            {% for m in measurements %}
-                "{{ m.timestamp|date:'Y-m-d H:i' }}"{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
+        // Przygotuj dane dla wykresu
+        var timestampStrings = [];
+        {% for m in measurements %}
+            timestampStrings.push("{{ m.timestamp|date:'Y-m-d H:i' }}");
+        {% endfor %}
         
-        var values = [
-            {% for m in measurements %}
-                {{ m.value }}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ];
+        var values = [];
+        {% for m in measurements %}
+            values.push({{ m.value }});
+        {% endfor %}
         
-        // Reverse the arrays to have older values on the left and recent on the right
+        // Odwróć tablice, aby starsze wartości były po lewej, a nowsze po prawej
         timestampStrings.reverse();
         values.reverse();
         
-        // Create chart if we have data
+        // Utwórz wykres, jeśli mamy dane
         if (timestampStrings.length > 0) {
-            // Convert timestamp strings to Date objects
+            // Konwertuj ciągi timestampów na obiekty Date
             var data = timestampStrings.map(function(timestampStr, index) {
                 return {
                     x: new Date(timestampStr.replace(' ', 'T')),
@@ -166,7 +164,7 @@
                 type: 'line',
                 data: {
                     datasets: [{
-                        label: "{% if measurements.0 %}{{ measurements.0.get_type_display }}{% else %}Measurement{% endif %}",
+                        label: "{% if measurements.0 %}{{ measurements.0.get_type_display }}{% else %}Pomiar{% endif %}",
                         data: data,
                         backgroundColor: 'rgba(79, 70, 229, 0.2)',
                         borderColor: 'rgba(79, 70, 229, 1)',
@@ -184,7 +182,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Value'
+                                text: 'Wartość'
                             }
                         },
                         x: {
@@ -192,14 +190,14 @@
                             time: {
                                 unit: 'day',
                                 displayFormats: {
-                                    day: 'MMM d, yyyy',
-                                    hour: 'MMM d, HH:mm'
+                                    day: 'd MMM yyyy',
+                                    hour: 'd MMM, HH:mm'
                                 },
-                                tooltipFormat: 'MMM d, yyyy HH:mm'
+                                tooltipFormat: 'd MMM yyyy HH:mm'
                             },
                             title: {
                                 display: true,
-                                text: 'Time'
+                                text: 'Data'
                             }
                         }
                     },
@@ -219,9 +217,9 @@
                 }
             });
         } else {
-            // Show a message when no data is available
+            // Pokaż komunikat, gdy nie ma dostępnych danych
             var noDataMessage = document.createElement('div');
-            noDataMessage.textContent = 'No measurement data available for chart';
+            noDataMessage.textContent = 'Brak danych pomiarowych dla wykresu';
             noDataMessage.className = 'text-gray-500 text-center py-16';
             document.querySelector('#measurementChart').parentNode.replaceChild(noDataMessage, document.querySelector('#measurementChart'));
         }

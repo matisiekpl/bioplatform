@@ -5,7 +5,7 @@
 {% block content %}
 <div class="max-w-3xl mx-auto">
     <div class="mb-6 flex items-center text-sm">
-        <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+        <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Zespoły</a>
         <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
@@ -18,22 +18,22 @@
             <p class="mt-1 text-sm text-gray-500">{{ team.description }}</p>
         </div>
         <a href="{% url 'team_list' %}" class="text-indigo-600 hover:text-indigo-900">
-            Back to Teams
+            Powrót do Zespołów
         </a>
     </div>
 
     <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Team Information</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Informacje o zespole</h3>
         </div>
         <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
             <dl class="sm:divide-y sm:divide-gray-200">
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Team Name</dt>
+                    <dt class="text-sm font-medium text-gray-500">Nazwa zespołu</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ team.name }}</dd>
                 </div>
                 <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Description</dt>
+                    <dt class="text-sm font-medium text-gray-500">Opis</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ team.description }}</dd>
                 </div>
             </dl>
@@ -46,9 +46,9 @@
                 <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                 </svg>
-                <h3 class="ml-3 text-lg font-medium text-gray-900">Experiments</h3>
+                <h3 class="ml-3 text-lg font-medium text-gray-900">Eksperymenty</h3>
             </div>
-            <p class="mt-2 text-sm text-gray-500">View and manage experiments for this team</p>
+            <p class="mt-2 text-sm text-gray-500">Przeglądaj i zarządzaj eksperymentami tego zespołu</p>
         </a>
 
         <a href="{% url 'team_members' team.pk %}" class="bg-white shadow overflow-hidden rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
@@ -56,19 +56,19 @@
                 <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                 </svg>
-                <h3 class="ml-3 text-lg font-medium text-gray-900">Team Members</h3>
+                <h3 class="ml-3 text-lg font-medium text-gray-900">Członkowie zespołu</h3>
             </div>
-            <p class="mt-2 text-sm text-gray-500">View and manage team members</p>
+            <p class="mt-2 text-sm text-gray-500">Przeglądaj i zarządzaj członkami zespołu</p>
         </a>
     </div>
 
     {% if user_role == 'ADMIN' %}
     <div class="flex justify-end space-x-4 mt-8">
         <a href="{% url 'team_update' team.pk %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Edit Team
+            Edytuj zespół
         </a>
         <a href="{% url 'team_delete' team.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-            Delete Team
+            Usuń zespół
         </a>
     </div>
     {% endif %}

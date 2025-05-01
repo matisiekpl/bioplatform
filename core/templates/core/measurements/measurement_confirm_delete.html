@@ -1,10 +1,10 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Delete Measurement - BioPlatform{% endblock %}
+{% block title %}Usuń pomiar - BioPlatform{% endblock %}
 
 {% block content %}
 <div class="mb-6 flex items-center text-sm">
-    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Zespoły</a>
     <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
     </svg>
@@ -18,19 +18,19 @@
 <div class="bg-white shadow overflow-hidden sm:rounded-lg p-6">
     <div class="pb-5 border-b border-gray-200">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
-            Delete Measurement
+            Usuń pomiar
         </h3>
         <p class="mt-1 text-sm text-gray-500">
-            Are you sure you want to delete this measurement?
+            Czy na pewno chcesz usunąć ten pomiar?
         </p>
     </div>
 
     <div class="mt-4 bg-gray-50 p-4 rounded">
-        <h4 class="text-md font-medium text-gray-900">Measurement Details</h4>
-        <p class="mt-1 text-sm text-gray-600">Type: {{ object.get_type_display }}</p>
-        <p class="text-sm text-gray-600">Value: {{ object.value }}</p>
-        <p class="text-sm text-gray-600">Measured at: {{ object.timestamp|date:"F j, Y H:i" }}</p>
-        <p class="text-sm text-gray-600">Added by: {{ object.created_by.name }}</p>
+        <h4 class="text-md font-medium text-gray-900">Szczegóły pomiaru</h4>
+        <p class="mt-1 text-sm text-gray-600">Typ: {{ object.get_type_display }}</p>
+        <p class="text-sm text-gray-600">Wartość: {{ object.value }}</p>
+        <p class="text-sm text-gray-600">Zmierzono: {{ object.timestamp|date:"j F Y H:i" }}</p>
+        <p class="text-sm text-gray-600">Dodane przez: {{ object.created_by.name }}</p>
     </div>
     
     <div class="mt-6">
@@ -39,11 +39,11 @@
             <div class="flex justify-end">
                 <a href="{% url 'measurement_list' experiment_id=experiment.id %}" 
                     class="mr-3 bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Cancel
+                    Anuluj
                 </a>
                 <button type="submit"
                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                    Delete
+                    Usuń
                 </button>
             </div>
         </form>

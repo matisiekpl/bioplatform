@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 
 <head>
     <meta charset="UTF-8">
@@ -39,11 +39,11 @@
                 </div>
                 <div class="flex items-center">
                     {% if user.is_authenticated %}
-                    <span class="text-gray-700 mr-4">Welcome, {{ user.name }}</span>
-                    <a href="{% url 'logout' %}" class="text-gray-700 hover:text-gray-900">Logout</a>
+                    <span class="text-gray-700 mr-4">Witaj, {{ user.name }}</span>
+                    <a href="{% url 'logout' %}" class="text-gray-700 hover:text-gray-900">Wyloguj</a>
                     {% else %}
-                    <a href="{% url 'login' %}" class="text-gray-700 hover:text-gray-900 mr-4">Login</a>
-                    <a href="{% url 'register' %}" class="text-gray-700 hover:text-gray-900">Register</a>
+                    <a href="{% url 'login' %}" class="text-gray-700 hover:text-gray-900 mr-4">Logowanie</a>
+                    <a href="{% url 'register' %}" class="text-gray-700 hover:text-gray-900">Rejestracja</a>
                     {% endif %}
                 </div>
             </div>

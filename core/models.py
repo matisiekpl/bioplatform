@@ -24,9 +24,9 @@ class Team(models.Model):
 
 class Membership(models.Model):
     class Role(models.TextChoices):
-        VIEWER = "VIEWER", "Viewer"
-        EDITOR = "EDITOR", "Editor"
-        ADMIN = "ADMIN", "Admin"
+        VIEWER = "VIEWER", "Do odczytu"
+        EDITOR = "EDITOR", "Edytor"
+        ADMIN = "ADMIN", "Administrator"
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="memberships")
@@ -43,7 +43,7 @@ class Membership(models.Model):
 
 class Experiment(models.Model):
     class Type(models.TextChoices):
-        CELL_LINE = "CELL_LINE", "Cell Line"
+        CELL_LINE = "CELL_LINE", "Linia komórkowa"
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -59,8 +59,8 @@ class Experiment(models.Model):
 
 class Measurement(models.Model):
     class Type(models.TextChoices):
-        CELL_COUNT = "CELL_COUNT", "Cell Count"
-        ADHESION_RATE = "ADHESION_RATE", "Adhesion Rate"
+        CELL_COUNT = "CELL_COUNT", "Liczba komórek"
+        ADHESION_RATE = "ADHESION_RATE", "Wskaźnik adhezji"
 
     id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=20, choices=Type.choices)

@@ -2,16 +2,16 @@
 
 {% block title %}
 {% if form.instance.pk %}
-Edit Measurement - {{ form.instance.get_type_display }}
+Edycja pomiaru - {{ form.instance.get_type_display }}
 {% else %}
-Add Measurement - {{ experiment.name }}
+Dodaj pomiar - {{ experiment.name }}
 {% endif %}
 - BioPlatform
 {% endblock %}
 
 {% block content %}
 <div class="mb-6 flex items-center text-sm">
-    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Zespoły</a>
     <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
     </svg>
@@ -26,16 +26,16 @@ Add Measurement - {{ experiment.name }}
     <div class="pb-5 border-b border-gray-200">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
             {% if form.instance.pk %}
-            Edit Measurement
+            Edycja pomiaru
             {% else %}
-            Add New Measurement
+            Dodaj nowy pomiar
             {% endif %}
         </h3>
         <p class="mt-1 text-sm text-gray-500">
             {% if form.instance.pk %}
-            Update the measurement details.
+            Zaktualizuj szczegóły pomiaru.
             {% else %}
-            Enter measurement details for {{ experiment.name }}.
+            Wprowadź szczegóły pomiaru dla {{ experiment.name }}.
             {% endif %}
         </p>
     </div>
@@ -44,7 +44,7 @@ Add Measurement - {{ experiment.name }}
         {% csrf_token %}
         
         <div>
-            <label for="{{ form.type.id_for_label }}" class="block text-sm font-medium text-gray-700">Measurement Type</label>
+            <label for="{{ form.type.id_for_label }}" class="block text-sm font-medium text-gray-700">Typ pomiaru</label>
             {{ form.type }}
             {% if form.type.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.type.errors }}</p>
@@ -52,7 +52,7 @@ Add Measurement - {{ experiment.name }}
         </div>
         
         <div>
-            <label for="{{ form.value.id_for_label }}" class="block text-sm font-medium text-gray-700">Value</label>
+            <label for="{{ form.value.id_for_label }}" class="block text-sm font-medium text-gray-700">Wartość</label>
             {{ form.value }}
             {% if form.value.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.value.errors }}</p>
@@ -60,7 +60,7 @@ Add Measurement - {{ experiment.name }}
         </div>
         
         <div>
-            <label for="{{ form.timestamp.id_for_label }}" class="block text-sm font-medium text-gray-700">Timestamp</label>
+            <label for="{{ form.timestamp.id_for_label }}" class="block text-sm font-medium text-gray-700">Data i czas</label>
             {{ form.timestamp }}
             {% if form.timestamp.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.timestamp.errors }}</p>
@@ -68,15 +68,15 @@ Add Measurement - {{ experiment.name }}
         </div>
         
         <div>
-            <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">Image</label>
+            <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">Zdjęcie</label>
             {{ form.image }}
             {% if form.image.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.image.errors }}</p>
             {% endif %}
             {% if form.instance.image %}
             <div class="mt-2">
-                <p class="text-sm text-gray-500">Current image:</p>
-                <img src="{{ form.instance.image.url }}" alt="Measurement image" class="mt-2 h-32 object-contain border border-gray-200 rounded-md">
+                <p class="text-sm text-gray-500">Aktualne zdjęcie:</p>
+                <img src="{{ form.instance.image.url }}" alt="Zdjęcie pomiaru" class="mt-2 h-32 object-contain border border-gray-200 rounded-md">
             </div>
             {% endif %}
         </div>
@@ -84,11 +84,11 @@ Add Measurement - {{ experiment.name }}
         <div class="flex justify-end">
             <a href="{% url 'measurement_list' experiment_id=experiment.id %}" 
                 class="mr-3 bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Cancel
+                Anuluj
             </a>
             <button type="submit"
                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {% if form.instance.pk %}Update{% else %}Save{% endif %}
+                {% if form.instance.pk %}Aktualizuj{% else %}Zapisz{% endif %}
             </button>
         </div>
     </form>
@@ -96,7 +96,7 @@ Add Measurement - {{ experiment.name }}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // No autodetect functionality
+        // Brak funkcjonalności automatycznego wykrywania
     });
 </script>
 {% endblock %} 
