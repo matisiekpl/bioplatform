@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from django.conf import settings
 
+# Adopted from my thesis project: https://github.com/matisiekpl/cell-detector
 def extract_cells(image_file):
     """
     Analyzes an image to detect cells and returns count and processed images
