@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+Analysis Results - {{ experiment.name }} - BioPlatform
+{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex items-center text-sm">
+    <a href="{% url 'team_list' %}" class="text-gray-500 hover:text-gray-700">Teams</a>
+    <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+    <a href="{% url 'experiment_list' team_id=team.id %}" class="text-gray-500 hover:text-gray-700">{{ team.name }}</a>
+    <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+    <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="text-gray-500 hover:text-gray-700">{{ experiment.name }}</a>
+</div>
+
+<div class="bg-white shadow overflow-hidden sm:rounded-lg p-6">
+    <div class="pb-5 border-b border-gray-200">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Cell Analysis Results
+        </h3>
+        <p class="mt-1 text-sm text-gray-500">
+            We detected <span class="font-bold">{{ cell_count }}</span> cells in your image.
+        </p>
+    </div>
+
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <h4 class="text-md font-medium text-gray-700 mb-2">Original Image</h4>
+            <img src="/media/{{ original_img }}" alt="Original Image" class="w-full rounded-md shadow-sm border border-gray-200">
+        </div>
+        <div>
+            <h4 class="text-md font-medium text-gray-700 mb-2">Detected Cells</h4>
+            <img src="/media/{{ contours_img }}" alt="Image with Detected Cells" class="w-full rounded-md shadow-sm border border-gray-200">
+            <p class="mt-2 text-sm text-gray-500">
+                Green contours show detected cell boundaries. Blue circles mark the center of each detected cell.
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-8 pt-5 border-t border-gray-200">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <div class="flex items-center">
+                    <div class="w-1/2">
+                        <label for="corrected_count" class="block text-sm font-medium text-gray-700 mb-2">
+                            Cell Count
+                        </label>
+                        <input type="number" name="corrected_count" id="corrected_count" 
+                            value="{{ cell_count }}" min="0" step="1"
+                            class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm outline outline-1 outline-gray-300">
+                        <p class="mt-1 text-sm text-gray-500">
+                            You can manually adjust the cell count if needed.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-4">
+                <button type="submit" name="cancel" 
+                    class="relative w-32 flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </button>
+                <button type="submit" name="save" 
+                    class="relative w-48 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save Measurement
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

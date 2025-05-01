@@ -57,13 +57,6 @@ class ExperimentForm(forms.ModelForm):
 
 
 class MeasurementForm(forms.ModelForm):
-    autodetect = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(attrs={
-            'class': 'h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
-        })
-    )
-    
     class Meta:
         model = Measurement
         fields = ['type', 'value', 'timestamp', 'image']
@@ -91,23 +84,13 @@ class MeasurementForm(forms.ModelForm):
             # Format current time as ISO format for datetime-local input
             current_time = timezone.now().strftime('%Y-%m-%dT%H:%M')
             self.fields['timestamp'].initial = current_time
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        autodetect = cleaned_data.get('autodetect')
-        measurement_type = cleaned_data.get('type')
-        value = cleaned_data.get('value')
-        image = cleaned_data.get('image')
-        
-        # If using autodetect for cell count, an image is required but value can be empty
-        if autodetect and measurement_type == Measurement.Type.CELL_COUNT:
-            if not image:
-                self.add_error('image', 'An image is required when using autodetect')
-            # Remove any value error since we'll calculate it automatically
-            if 'value' in self._errors:
-                del self._errors['value']
-        # Otherwise, value is required
-        elif not value and value != 0:
-            self.add_error('value', 'This field is required.')
-            
-        return cleaned_data
+
+
+class ImageAnalysisForm(forms.Form):
+    image = forms.ImageField(
+        widget=forms.FileInput(attrs={
+            'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
+            'accept': 'image/*',
+            'required': True
+        })
+    )

@@ -1,12 +1,7 @@
 {% extends 'core/base.html' %}
 
 {% block title %}
-{% if form.instance.pk %}
-Edit Measurement - {{ form.instance.get_type_display }}
-{% else %}
-Add Measurement - {{ experiment.name }}
-{% endif %}
-- BioPlatform
+Analyze Cell Image - {{ experiment.name }} - BioPlatform
 {% endblock %}
 
 {% block content %}
@@ -25,18 +20,10 @@ Add Measurement - {{ experiment.name }}
 <div class="bg-white shadow overflow-hidden sm:rounded-lg p-6">
     <div class="pb-5 border-b border-gray-200">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
-            {% if form.instance.pk %}
-            Edit Measurement
-            {% else %}
-            Add New Measurement
-            {% endif %}
+            Analyze Cells from Image
         </h3>
         <p class="mt-1 text-sm text-gray-500">
-            {% if form.instance.pk %}
-            Update the measurement details.
-            {% else %}
-            Enter measurement details for {{ experiment.name }}.
-            {% endif %}
+            Upload an image to automatically detect and count cells.
         </p>
     </div>
 
@@ -44,40 +31,10 @@ Add Measurement - {{ experiment.name }}
         {% csrf_token %}
         
         <div>
-            <label for="{{ form.type.id_for_label }}" class="block text-sm font-medium text-gray-700">Measurement Type</label>
-            {{ form.type }}
-            {% if form.type.errors %}
-            <p class="mt-2 text-sm text-red-600">{{ form.type.errors }}</p>
-            {% endif %}
-        </div>
-        
-        <div>
-            <label for="{{ form.value.id_for_label }}" class="block text-sm font-medium text-gray-700">Value</label>
-            {{ form.value }}
-            {% if form.value.errors %}
-            <p class="mt-2 text-sm text-red-600">{{ form.value.errors }}</p>
-            {% endif %}
-        </div>
-        
-        <div>
-            <label for="{{ form.timestamp.id_for_label }}" class="block text-sm font-medium text-gray-700">Timestamp</label>
-            {{ form.timestamp }}
-            {% if form.timestamp.errors %}
-            <p class="mt-2 text-sm text-red-600">{{ form.timestamp.errors }}</p>
-            {% endif %}
-        </div>
-        
-        <div>
-            <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">Image</label>
+            <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">Select Image</label>
             {{ form.image }}
             {% if form.image.errors %}
             <p class="mt-2 text-sm text-red-600">{{ form.image.errors }}</p>
-            {% endif %}
-            {% if form.instance.image %}
-            <div class="mt-2">
-                <p class="text-sm text-gray-500">Current image:</p>
-                <img src="{{ form.instance.image.url }}" alt="Measurement image" class="mt-2 h-32 object-contain border border-gray-200 rounded-md">
-            </div>
             {% endif %}
         </div>
         
@@ -88,15 +45,9 @@ Add Measurement - {{ experiment.name }}
             </a>
             <button type="submit"
                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {% if form.instance.pk %}Update{% else %}Save{% endif %}
+                Analyze
             </button>
         </div>
     </form>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // No autodetect functionality
-    });
-</script>
 {% endblock %} 

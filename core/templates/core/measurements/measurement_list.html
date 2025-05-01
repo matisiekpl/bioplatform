@@ -18,10 +18,16 @@
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Measurements for {{ experiment.name }}</h1>
     {% if user_role != 'VIEWER' %}
-    <a href="{% url 'measurement_create' experiment_id=experiment.id %}"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Add Measurement
-    </a>
+    <div class="flex space-x-3">
+        <a href="{% url 'analyze_image_form' experiment_id=experiment.id %}"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Analyze from Image
+        </a>
+        <a href="{% url 'measurement_create' experiment_id=experiment.id %}"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Add Measurement
+        </a>
+    </div>
     {% endif %}
 </div>
 
