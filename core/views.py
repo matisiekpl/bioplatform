@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 from .models import Team, Membership, Experiment, Measurement
@@ -96,6 +96,25 @@ class TeamListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Team.objects.filter(memberships__user=self.request.user)
+
+
+class TeamDetailView(LoginRequiredMixin, DetailView):
+    model = Team
+    template_name = "core/teams/team_detail.html"
+    context_object_name = "team"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        team = self.get_object()
+        
+        # Add user's role to context for template permission checks
+        membership = Membership.objects.filter(
+            user=self.request.user,
+            team=team
+        ).first()
+        context['user_role'] = membership.role if membership else None
+        
+        return context
 
 
 class TeamCreateView(LoginRequiredMixin, CreateView):

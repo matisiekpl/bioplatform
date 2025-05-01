@@ -8,17 +8,26 @@
     <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
     </svg>
-    <span class="font-medium text-gray-900">{{ team.name }}</span>
+    <a href="{% url 'team_detail' pk=team.id %}" class="text-gray-500 hover:text-gray-700">{{ team.name }}</a>
+    <svg class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+    <span class="font-medium text-gray-900">Experiments</span>
 </div>
 
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Experiments for {{ team.name }}</h1>
-    {% if user_role != 'VIEWER' %}
-    <a href="{% url 'experiment_create' team_id=team.id %}"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Create Experiment
-    </a>
-    {% endif %}
+    <div class="flex space-x-4">
+        <a href="{% url 'team_detail' pk=team.id %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Back to Team
+        </a>
+        {% if user_role != 'VIEWER' %}
+        <a href="{% url 'experiment_create' team_id=team.id %}"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Create Experiment
+        </a>
+        {% endif %}
+    </div>
 </div>
 
 <div class="bg-white shadow overflow-hidden sm:rounded-md">

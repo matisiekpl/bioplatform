@@ -6,6 +6,7 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("teams/", views.TeamListView.as_view(), name="team_list"),
+    path("teams/<int:pk>/", views.TeamDetailView.as_view(), name="team_detail"),
     path("teams/create/", views.TeamCreateView.as_view(), name="team_create"),
     path("teams/<int:pk>/update/", views.TeamUpdateView.as_view(), name="team_update"),
     path("teams/<int:pk>/delete/", views.TeamDeleteView.as_view(), name="team_delete"),
