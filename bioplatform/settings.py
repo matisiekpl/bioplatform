@@ -21,6 +21,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://labolatorium.mateuszwozniak.com",
 ]
 
+# CSRF Settings
+CSRF_TRUSTED_ORIGINS = [
+    "https://labolatorium.mateuszwozniak.com",
+]
+
 
 # Application definition
 
@@ -31,12 +36,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "core",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
