@@ -26,9 +26,9 @@
 </div>
 
 <div class="mb-6">
-    <form method="get" class="flex items-center">
+    <form method="get" class="flex items-center" id="measurement-type-form">
         <label for="type-selector" class="block text-sm font-medium text-gray-700 mr-3">Filter by Type:</label>
-        <select id="type-selector" name="type" onchange="this.form.submit()" 
+        <select id="type-selector" name="type" onchange="handleTypeChange(this.value)" 
                 class="mt-1 block w-48 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             {% for type_value, type_label in measurement_types %}
             <option value="{{ type_value }}" {% if selected_type == type_value %}selected{% endif %}>
@@ -90,19 +90,52 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Chart initialization -->
+<!-- Measurement type storage and chart initialization -->
 <script>
+    // Function to handle type selection change
+    function handleTypeChange(value) {
+        // Store the selected type in localStorage
+        var experimentId = "{{ experiment.id }}";
+        var storageKey = "measurement_type_" + experimentId;
+        localStorage.setItem(storageKey, value);
+        
+        // Submit the form
+        document.getElementById('measurement-type-form').submit();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('measurementChart').getContext('2d');
+        // Check if we should restore the type from localStorage
+        var experimentId = "{{ experiment.id }}";
+        var storageKey = "measurement_type_" + experimentId;
+        var urlParams = new URLSearchParams(window.location.search);
+        
+        // If no type is in URL but we have one stored, use the stored type
+        if (!urlParams.has('type')) {
+            var storedType = localStorage.getItem(storageKey);
+            if (storedType) {
+                var typeSelector = document.getElementById('type-selector');
+                typeSelector.value = storedType;
+                // Submit the form to reload with the stored type
+                document.getElementById('measurement-type-form').submit();
+            }
+        } else {
+            // If type is in URL, store it
+            var currentType = urlParams.get('type');
+            if (currentType) {
+                localStorage.setItem(storageKey, currentType);
+            }
+        }
+        
+        var ctx = document.getElementById('measurementChart').getContext('2d');
         
         // Prepare data for chart
-        let timestamps = [
+        var timestamps = [
             {% for m in measurements %}
                 "{{ m.timestamp|date:'Y-m-d H:i' }}"{% if not forloop.last %},{% endif %}
             {% endfor %}
         ];
         
-        let values = [
+        var values = [
             {% for m in measurements %}
                 {{ m.value }}{% if not forloop.last %},{% endif %}
             {% endfor %}
@@ -114,7 +147,7 @@
         
         // Create chart if we have data
         if (timestamps.length > 0) {
-            const measurementChart = new Chart(ctx, {
+            var measurementChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: timestamps,
@@ -164,7 +197,7 @@
             });
         } else {
             // Show a message when no data is available
-            const noDataMessage = document.createElement('div');
+            var noDataMessage = document.createElement('div');
             noDataMessage.textContent = 'No measurement data available for chart';
             noDataMessage.className = 'text-gray-500 text-center py-16';
             document.querySelector('#measurementChart').parentNode.replaceChild(noDataMessage, document.querySelector('#measurementChart'));
