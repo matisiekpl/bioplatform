@@ -95,6 +95,7 @@
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
 <!-- Measurement type storage and chart initialization -->
 <script>
@@ -135,7 +136,7 @@
         var ctx = document.getElementById('measurementChart').getContext('2d');
         
         // Prepare data for chart
-        var timestamps = [
+        var timestampStrings = [
             {% for m in measurements %}
                 "{{ m.timestamp|date:'Y-m-d H:i' }}"{% if not forloop.last %},{% endif %}
             {% endfor %}
@@ -148,18 +149,25 @@
         ];
         
         // Reverse the arrays to have older values on the left and recent on the right
-        timestamps.reverse();
+        timestampStrings.reverse();
         values.reverse();
         
         // Create chart if we have data
-        if (timestamps.length > 0) {
+        if (timestampStrings.length > 0) {
+            // Convert timestamp strings to Date objects
+            var data = timestampStrings.map(function(timestampStr, index) {
+                return {
+                    x: new Date(timestampStr.replace(' ', 'T')),
+                    y: values[index]
+                };
+            });
+            
             var measurementChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: timestamps,
                     datasets: [{
-                        label: {% if measurements.0 %}"{{ measurements.0.get_type_display }}"{% else %}"Measurement"{% endif %},
-                        data: values,
+                        label: "{% if measurements.0 %}{{ measurements.0.get_type_display }}{% else %}Measurement{% endif %}",
+                        data: data,
                         backgroundColor: 'rgba(79, 70, 229, 0.2)',
                         borderColor: 'rgba(79, 70, 229, 1)',
                         borderWidth: 2,
@@ -173,13 +181,22 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: false,
+                            beginAtZero: true,
                             title: {
                                 display: true,
                                 text: 'Value'
                             }
                         },
                         x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                displayFormats: {
+                                    day: 'MMM d, yyyy',
+                                    hour: 'MMM d, HH:mm'
+                                },
+                                tooltipFormat: 'MMM d, yyyy HH:mm'
+                            },
                             title: {
                                 display: true,
                                 text: 'Time'
