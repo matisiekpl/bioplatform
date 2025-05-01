@@ -34,10 +34,10 @@
     <ul class="divide-y divide-gray-200">
         {% for experiment in experiments %}
         <li class="hover:bg-gray-50 transition-colors w-full">
-            <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="block w-full">
-                <div class="px-4 py-4 sm:px-6 w-full">
-                    <div class="flex items-center justify-between w-full">
-                        <div class="flex-1 min-w-0">
+            <div class="px-4 py-4 sm:px-6 w-full">
+                <div class="flex items-center justify-between w-full">
+                    <div class="flex-1 min-w-0">
+                        <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="block">
                             <p class="text-sm font-medium truncate text-indigo-600">
                                 {{ experiment.name }}
                             </p>
@@ -47,23 +47,23 @@
                             <p class="mt-1 text-xs text-gray-400">
                                 Type: {{ experiment.get_type_display }} | Created: {{ experiment.created_at|date:"F j, Y" }}
                             </p>
-                        </div>
-                        <div class="ml-4 flex-shrink-0 flex space-x-4 relative z-10">
-                            <span class="text-indigo-600">
-                                Measurements
-                            </span>
-                            {% if user_role != 'VIEWER' %}
-                            <a href="{% url 'experiment_update' pk=experiment.id %}" class="text-indigo-600 hover:text-indigo-900" onclick="event.stopPropagation(); event.preventDefault();">
-                                Edit
-                            </a>
-                            <a href="{% url 'experiment_delete' pk=experiment.id %}" class="text-red-600 hover:text-red-900" onclick="event.stopPropagation(); event.preventDefault();">
-                                Delete
-                            </a>
-                            {% endif %}
-                        </div>
+                        </a>
+                    </div>
+                    <div class="ml-4 flex-shrink-0 flex space-x-4">
+                        <a href="{% url 'measurement_list' experiment_id=experiment.id %}" class="text-indigo-600 hover:text-indigo-900">
+                            Measurements
+                        </a>
+                        {% if user_role != 'VIEWER' %}
+                        <a href="{% url 'experiment_update' pk=experiment.id %}" class="text-indigo-600 hover:text-indigo-900" onclick="event.stopPropagation();">
+                            Edit
+                        </a>
+                        <a href="{% url 'experiment_delete' pk=experiment.id %}" class="text-red-600 hover:text-red-900" onclick="event.stopPropagation();">
+                            Delete
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
-            </a>
+            </div>
         </li>
         {% empty %}
         <li class="px-4 py-4 sm:px-6">
