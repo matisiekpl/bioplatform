@@ -16,6 +16,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["labolatorium.mateuszwozniak.com"]
 
+# CORS Settings
+CORS_ALLOWED_ORIGINS = [
+    "https://labolatorium.mateuszwozniak.com",
+]
+
 
 # Application definition
 
