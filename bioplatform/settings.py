@@ -14,7 +14,7 @@ SECRET_KEY = "django-insecure-999-81n2wiwb8*!4l1z26282_#nn43jq+=d6s_$eu)9h0tiwj&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["labolatorium.mateuszwozniak.com","localhost", "srv3.enteam.pl:5569"]
+ALLOWED_HOSTS = ["labolatorium.mateuszwozniak.com","localhost", "srv3.enteam.pl"]
 
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
