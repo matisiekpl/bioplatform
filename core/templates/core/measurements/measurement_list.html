@@ -45,7 +45,6 @@
     </form>
 </div>
 
-<!-- Sekcja wykresu -->
 <div class="bg-white shadow overflow-hidden sm:rounded-lg p-6 mb-6">
     <h2 class="text-lg font-medium text-gray-900 mb-4">Wartości pomiarów w czasie</h2>
     <div style="height: 300px;">
@@ -93,40 +92,31 @@
     </ul>
 </div>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
-<!-- Zapisywanie typu pomiarów i inicjalizacja wykresu -->
 <script>
-    // Funkcja obsługi zmiany wyboru typu
     function handleTypeChange(value) {
-        // Zapisz wybrany typ w localStorage
         var experimentId = "{{ experiment.id }}";
         var storageKey = "measurement_type_" + experimentId;
         localStorage.setItem(storageKey, value);
         
-        // Wyślij formularz
         document.getElementById('measurement-type-form').submit();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Sprawdź, czy powinniśmy przywrócić typ z localStorage
         var experimentId = "{{ experiment.id }}";
         var storageKey = "measurement_type_" + experimentId;
         var urlParams = new URLSearchParams(window.location.search);
         
-        // Jeśli nie ma typu w URL, ale mamy zapisany, użyj zapisanego typu
         if (!urlParams.has('type')) {
             var storedType = localStorage.getItem(storageKey);
             if (storedType) {
                 var typeSelector = document.getElementById('type-selector');
                 typeSelector.value = storedType;
-                // Wyślij formularz, aby przeładować z zapisanym typem
                 document.getElementById('measurement-type-form').submit();
             }
         } else {
-            // Jeśli typ jest w URL, zapisz go
             var currentType = urlParams.get('type');
             if (currentType) {
                 localStorage.setItem(storageKey, currentType);
@@ -135,7 +125,6 @@
         
         var ctx = document.getElementById('measurementChart').getContext('2d');
         
-        // Przygotuj dane dla wykresu
         var timestampStrings = [];
         {% for m in measurements %}
             timestampStrings.push("{{ m.timestamp|date:'Y-m-d H:i' }}");
@@ -146,13 +135,10 @@
             values.push({{ m.value }});
         {% endfor %}
         
-        // Odwróć tablice, aby starsze wartości były po lewej, a nowsze po prawej
         timestampStrings.reverse();
         values.reverse();
         
-        // Utwórz wykres, jeśli mamy dane
         if (timestampStrings.length > 0) {
-            // Konwertuj ciągi timestampów na obiekty Date
             var data = timestampStrings.map(function(timestampStr, index) {
                 return {
                     x: new Date(timestampStr.replace(' ', 'T')),
@@ -217,7 +203,6 @@
                 }
             });
         } else {
-            // Pokaż komunikat, gdy nie ma dostępnych danych
             var noDataMessage = document.createElement('div');
             noDataMessage.textContent = 'Brak danych pomiarowych dla wykresu';
             noDataMessage.className = 'text-gray-500 text-center py-16';

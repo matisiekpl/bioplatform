@@ -7,7 +7,6 @@ class TeamRoleRequiredMixin(UserPassesTestMixin):
     required_role = None
     
     def test_func(self):
-        # Get the team_id either from kwargs or from the object
         if hasattr(self, 'get_object'):
             try:
                 obj = self.get_object()
@@ -20,7 +19,6 @@ class TeamRoleRequiredMixin(UserPassesTestMixin):
                 else:
                     return False
             except:
-                # If we can't get the object (e.g., in CreateView), try from kwargs
                 team_id = self.kwargs.get('team_id')
                 if not team_id and 'experiment_id' in self.kwargs:
                     experiment = get_object_or_404(Experiment, id=self.kwargs['experiment_id'])
@@ -47,5 +45,4 @@ class TeamRoleRequiredMixin(UserPassesTestMixin):
         elif self.required_role == Membership.Role.ADMIN:
             return membership.role == Membership.Role.ADMIN
         
-        # By default, always allow (for viewer or when no specific role is required)
         return True 

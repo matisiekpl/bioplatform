@@ -27,8 +27,7 @@ class MeasurementForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not self.instance.pk:  # Only for new instances
-            # Format current time as ISO format for datetime-local input
+        if not self.instance.pk:
             current_time = timezone.now().strftime('%Y-%m-%dT%H:%M')
             self.fields['timestamp'].initial = current_time
 

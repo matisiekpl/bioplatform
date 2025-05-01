@@ -30,7 +30,6 @@ urlpatterns = [
     path('measurements/<int:pk>/update/', views.MeasurementUpdateView.as_view(), name='measurement_update'),
     path('measurements/<int:pk>/delete/', views.MeasurementDeleteView.as_view(), name='measurement_delete'),
     
-    # Image analysis paths
     path('experiments/<int:experiment_id>/analyze-image/', views.analyze_image_form, name='analyze_image_form'),
     path('analyze-image-results/', views.analyze_image_results, name='analyze_image_results'),
 ]

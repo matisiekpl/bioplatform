@@ -29,7 +29,6 @@ class MeasurementListView(LoginRequiredMixin, ListView):
         if measurement_type:
             queryset = queryset.filter(type=measurement_type)
         elif Measurement.objects.filter(experiment_id=experiment_id).exists():
-            # Default to first measurement type if no type is specified and measurements exist
             first_measurement = Measurement.objects.filter(experiment_id=experiment_id).first()
             if first_measurement:
                 queryset = queryset.filter(type=first_measurement.type)
@@ -42,18 +41,15 @@ class MeasurementListView(LoginRequiredMixin, ListView):
         context['experiment'] = experiment
         context['team'] = experiment.team
         
-        # Add user's role to context for template permission checks
         membership = Membership.objects.filter(
             user=self.request.user,
             team_id=experiment.team_id
         ).first()
         context['user_role'] = membership.role if membership else None
         
-        # Add measurement types for the selector
         context['measurement_types'] = Measurement.Type.choices
         context['selected_type'] = self.request.GET.get('type', '')
         
-        # If no type is selected but measurements exist, select the first type
         if not context['selected_type'] and self.get_queryset().exists():
             context['selected_type'] = self.get_queryset().first().type
             
@@ -115,10 +111,8 @@ class MeasurementDeleteView(LoginRequiredMixin, TeamRoleRequiredMixin, DeleteVie
 
 @login_required
 def analyze_image_form(request, experiment_id):
-    """View for uploading an image for cell analysis"""
     experiment = get_object_or_404(Experiment, id=experiment_id)
     
-    # Check if user has permission to create measurements
     membership = Membership.objects.filter(
         user=request.user,
         team=experiment.team
@@ -132,13 +126,10 @@ def analyze_image_form(request, experiment_id):
         form = ImageAnalysisForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['image']
-            # Store image temporarily in session
             request.session['analysis_image_path'] = image.name
             
-            # Upload and analyze the image
             cell_count, original_img, contours_img = extract_cells(image)
             
-            # Store results in session for the results page
             request.session['cell_count'] = cell_count
             request.session['original_img'] = original_img
             request.session['contours_img'] = contours_img
@@ -157,8 +148,6 @@ def analyze_image_form(request, experiment_id):
 
 @login_required
 def analyze_image_results(request):
-    """View for displaying analysis results and creating a measurement"""
-    # Get data from session
     cell_count = request.session.get('cell_count')
     original_img = request.session.get('original_img')
     contours_img = request.session.get('contours_img')
@@ -171,11 +160,9 @@ def analyze_image_results(request):
     experiment = get_object_or_404(Experiment, id=experiment_id)
     
     if request.method == 'POST':
-        # Create new measurement with the analyzed data
         if 'save' in request.POST:
             timestamp = timezone.now()
             
-            # Use the corrected count if provided
             try:
                 corrected_count = int(request.POST.get('corrected_count', cell_count))
                 if corrected_count < 0:
@@ -183,44 +170,34 @@ def analyze_image_results(request):
             except (ValueError, TypeError):
                 corrected_count = cell_count
                 
-            # Fix for handling the image path - need to create a File object from the path
-            
-            # Path to the actual file on disk
             image_path = os.path.join(settings.MEDIA_ROOT, original_img)
             
             measurement = Measurement(
                 experiment=experiment,
                 type=Measurement.Type.CELL_COUNT,
-                value=corrected_count,  # Use the corrected value
+                value=corrected_count,
                 timestamp=timestamp,
                 created_by=request.user
             )
             
-            # Save measurement first to get an ID
             measurement.save()
             
-            # Now handle image - copy file to the measurement_images directory
             target_dir = os.path.join(settings.MEDIA_ROOT, 'measurement_images')
             os.makedirs(target_dir, exist_ok=True)
             
-            # Extract filename from path and create a new unique name
             image_filename = os.path.basename(original_img)
             new_filename = f"measurement_{measurement.id}_{image_filename}"
             target_path = os.path.join(target_dir, new_filename)
             
-            # Copy the file
             shutil.copy(image_path, target_path)
             
-            # Set the image field to the relative path that Django expects
             measurement.image = f"measurement_images/{new_filename}"
             measurement.save()
             
-            # Clear session data
             for key in ['cell_count', 'original_img', 'contours_img', 'experiment_id', 'analysis_image_path']:
                 if key in request.session:
                     del request.session[key]
             
-            # Add success message showing if the count was corrected        
             if corrected_count != cell_count:
                 messages.success(request, f"Successfully saved measurement with manually corrected count of {corrected_count} cells (originally detected: {cell_count}).")
             else:
@@ -228,7 +205,6 @@ def analyze_image_results(request):
                 
             return redirect('measurement_list', experiment_id=experiment_id)
         else:
-            # User cancelled, clear session data
             for key in ['cell_count', 'original_img', 'contours_img', 'experiment_id', 'analysis_image_path']:
                 if key in request.session:
                     del request.session[key]

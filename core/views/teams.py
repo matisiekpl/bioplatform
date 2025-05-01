@@ -26,7 +26,6 @@ class TeamDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         team = self.get_object()
         
-        # Add user's role to context for template permission checks
         membership = Membership.objects.filter(
             user=self.request.user,
             team=team
@@ -142,7 +141,6 @@ def update_member_role(request, team_pk, membership_pk):
     if new_role not in [role[0] for role in Membership.Role.choices]:
         return JsonResponse({"error": "Invalid role"}, status=400)
 
-    # Check if this would remove the last admin
     if membership.role == Membership.Role.ADMIN and new_role != Membership.Role.ADMIN:
         if (
             Membership.objects.filter(team=team, role=Membership.Role.ADMIN).count()
