@@ -6,6 +6,11 @@ Link: https://labolatorium.mateuszwozniak.com/
 
 Część kodu pochodzi z projektu inżynierskiego Mateusza Woźniaka: http://github.com/matisiekpl/cell-detector
 
+## Autorzy
+- Paulina Wór
+- Oliwia Rewer
+- Mateusz Woźniak
+
 ## Przegląd
 
 BioPlatform to aplikacja internetowa, która umożliwia naukowcom:
