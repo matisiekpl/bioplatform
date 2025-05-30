@@ -3,6 +3,7 @@
 Platforma oparta na Django do zarządzania i analizy danych biologicznych, zaprojektowana specjalnie dla eksperymentów z hodowlami komórkowymi.
 
 Link: https://labolatorium.mateuszwozniak.com/
+
 Część kodu pochodzi z projektu inżynierskiego Mateusza Woźniaka: http://github.com/matisiekpl/cell-detector
 
 ## Przegląd
