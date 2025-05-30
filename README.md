@@ -2,6 +2,8 @@
 
 Platforma oparta na Django do zarządzania i analizy danych biologicznych, zaprojektowana specjalnie dla eksperymentów z hodowlami komórkowymi.
 
+Link: https://labolatorium.mateuszwozniak.com/
+
 ## Przegląd
 
 BioPlatform to aplikacja internetowa, która umożliwia naukowcom:
