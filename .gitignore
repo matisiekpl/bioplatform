@@ -142,3 +142,4 @@ GitHub.sublime-settings
 !.elasticbeanstalk/*.global.yml
 
 .idea/
+out/
