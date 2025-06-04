@@ -135,4 +135,44 @@
         \end{verbatim}
     \end{frame}
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \section{Tailwind CSS w projekcie}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{frame}[fragile]{Tailwind CSS: podejście utility-first}
+        \begin{itemize}
+            \item Do stylowania interfejsu użyto Tailwind CSS (utility-first)
+            \item Przykład użycia klas utility w szablonie:
+        \end{itemize}
+        \vspace{0.5em}
+        \textbf{Fragment HTML:}
+        \begin{verbatim}
+<a href="..." class="bg-white shadow overflow-hidden rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+    <div class="flex items-center">
+        <svg class="h-6 w-6 text-indigo-600" ...></svg>
+        <h3 class="ml-3 text-lg font-medium text-gray-900">Eksperymenty</h3>
+    </div>
+    <p class="mt-2 text-sm text-gray-500">Przeglądaj i zarządzaj eksperymentami tego zespołu</p>
+</a>
+        \end{verbatim}
+    \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \section{Wykorzystanie projektu cell-detector}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{frame}{Automatyczna ekstrakcja komórek z obrazów}
+        \begin{itemize}
+            \item Do automatycznej analizy obrazów mikroskopowych wykorzystano projekt cell-detector, który Mateusz Woźniak stworzył w ramach projektu inżynierskiego.
+            \item Algorytm umożliwia wykrywanie i wycinanie pojedynczych komórek z rozmazów krwi obwodowej oraz ich liczenie.
+            \item Wykorzystane metody:
+            \begin{itemize}
+                \item Progowanie Otsu
+                \item Wyszukiwanie konturów 
+                \item Momenty Hu
+            \end{itemize}
+            \begin{figure}
+                \includegraphics[width=0.8\textwidth]{detected_cells.png}
+            \end{figure}
+        \end{itemize}
+    \end{frame}
+
 \end{document}
