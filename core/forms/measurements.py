@@ -31,6 +31,19 @@ class MeasurementForm(forms.ModelForm):
             current_time = timezone.now().strftime('%Y-%m-%dT%H:%M')
             self.fields['timestamp'].initial = current_time
 
+    def clean(self):
+        cleaned_data = super().clean()
+        value = cleaned_data.get("value")
+        type_ = cleaned_data.get("type")
+        timestamp = cleaned_data.get("timestamp")
+        if value is not None and value <= 0:
+            self.add_error("value", "Wartość musi być większa od zera")
+        if not type_:
+            self.add_error("type", "Typ pomiaru jest wymagany")
+        if timestamp and timestamp > timezone.now():
+            self.add_error("timestamp", "Data nie może być z przyszłości")
+        return cleaned_data
+
 
 class ImageAnalysisForm(forms.Form):
     image = forms.ImageField(
