@@ -117,4 +117,22 @@
         \end{itemize}
     \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{frame}[fragile]{Przykład walidacji w Django}
+        \textbf{Fragment kodu walidacji formularza rejestracji:}
+        \begin{verbatim}
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        email = cleaned_data.get("email")
+        username = cleaned_data.get("username")
+
+        if password and len(password) < 8:
+            self.add_error("password", "Hasło musi mieć co najmniej 8 znaków")
+        ...
+        return cleaned_data
+        \end{verbatim}
+    \end{frame}
+
 \end{document}
