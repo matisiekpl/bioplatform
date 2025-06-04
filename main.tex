@@ -1,0 +1,47 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    AGH University of Krakow Beamer Theme Presentation
+%    Prezentacja systemu: System do śledzenia przebiegu eksperymentów labolatoryjnych
+%    Autorzy: Oliwia Rewer, Paulina Wór, Mateusz Woźniak
+%
+% opis aplikacji - zastosowanie, użytkownicy, role,
+% opis walidacji wprowadzanych danych,
+% dane - skąd były wzięte i w jaki sposób zostały wprowadzane,
+% omówienie wyglądu aplikacji - style CSS,
+% dynamiczna zawartość - skrypty JS, generowanie mediów przez serwer,
+% najciekawsze elementy aplikacji,
+% sposób testowania aplikacji.
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[polish,aspectratio=1610]{beamer}
+\usetheme[parttitle=date]{AGH} % Bez opcji 'dark' dla białego tła
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[polish]{babel}
+
+\title{Prezentacja systemu:\\System do śledzenia przebiegu eksperymentów labolatoryjnych}
+\author{Rewer, Wór, Woźniak}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Wprowadzenie}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Wprowadzenie}
+    \begin{itemize}
+        \item Celem projektu jest stworzenie automatycznego systemu monitorowania sali szpitalnej.
+        \item System wykorzystuje algorytm YOLO uruchomiony na Raspberry Pi 4B z podłączoną kamerą.
+        \item Oprogramowanie udostępnia wyniki przez REST API oraz prezentuje je na panelu webowym.
+        \item Przewidywana dokładność detekcji: co najmniej 70\% przy latencji poniżej 1 sekundy.
+    \end{itemize}
+\end{frame}
+
+\end{document}
