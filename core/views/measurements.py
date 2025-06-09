@@ -14,6 +14,8 @@ from core.forms import MeasurementForm, ImageAnalysisForm
 from core.utils import extract_cells
 from .mixins import TeamRoleRequiredMixin
 from django.core.paginator import Paginator
+import csv
+from django.http import HttpResponse
 
 
 class AlwaysPaginator(Paginator):
@@ -242,4 +244,32 @@ def analyze_image_results(request):
         'contours_img': contours_img,
         'experiment': experiment,
         'team': experiment.team
-    }) 
+    })
+
+
+@login_required
+def export_measurements_csv(request, experiment_id):
+    experiment = get_object_or_404(Experiment, id=experiment_id)
+    measurement_type = request.GET.get('type')
+    
+    queryset = Measurement.objects.filter(experiment_id=experiment_id).order_by('-timestamp')
+    
+    if measurement_type:
+        queryset = queryset.filter(type=measurement_type)
+    
+    response = HttpResponse(content_type='text/csv')
+    filename = f"pomiary_{experiment.name}_{timezone.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    writer = csv.writer(response)
+    writer.writerow(['Typ pomiaru', 'Wartość', 'Data i czas', 'Dodane przez'])
+    
+    for measurement in queryset:
+        writer.writerow([
+            measurement.get_type_display(),
+            measurement.value,
+            measurement.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            measurement.created_by.name
+        ])
+    
+    return response 

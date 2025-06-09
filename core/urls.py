@@ -34,4 +34,6 @@ urlpatterns = [
     
     path('experiments/<int:experiment_id>/analyze-image/', views.analyze_image_form, name='analyze_image_form'),
     path('analyze-image-results/', views.analyze_image_results, name='analyze_image_results'),
+    
+    path('experiments/<int:experiment_id>/export-csv/', views.export_measurements_csv, name='export_measurements_csv'),
 ]

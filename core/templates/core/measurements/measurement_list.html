@@ -17,8 +17,12 @@
 
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Pomiary dla {{ experiment.name }}</h1>
-    {% if user_role != 'VIEWER' %}
     <div class="flex space-x-3">
+        <a href="{% url 'export_measurements_csv' experiment_id=experiment.id %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+            Eksportuj CSV
+        </a>
+        {% if user_role != 'VIEWER' %}
         <a href="{% url 'analyze_image_form' experiment_id=experiment.id %}"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
             Analiza ze zdjęcia
@@ -27,8 +31,8 @@
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Dodaj pomiar
         </a>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
 
 <div class="mb-6">

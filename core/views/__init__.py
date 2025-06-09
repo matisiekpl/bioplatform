@@ -11,6 +11,7 @@ from .experiments import (
 from .measurements import (
     MeasurementListView, MeasurementCreateView,
     MeasurementUpdateView, MeasurementDeleteView,
-    analyze_image_form, analyze_image_results
+    analyze_image_form, analyze_image_results,
+    export_measurements_csv
 )
 from .mixins import TeamRoleRequiredMixin 
