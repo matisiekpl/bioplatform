@@ -13,12 +13,23 @@ from core.models import Experiment, Measurement, Membership
 from core.forms import MeasurementForm, ImageAnalysisForm
 from core.utils import extract_cells
 from .mixins import TeamRoleRequiredMixin
+from django.core.paginator import Paginator
+
+
+class AlwaysPaginator(Paginator):
+    @property
+    def num_pages(self):
+        # Always show pagination, even with just one page
+        count = max(1, super().num_pages)
+        return count
 
 
 class MeasurementListView(LoginRequiredMixin, ListView):
     model = Measurement
     template_name = 'core/measurements/measurement_list.html'
     context_object_name = 'measurements'
+    paginate_by = 10
+    paginator_class = AlwaysPaginator
 
     def get_queryset(self):
         experiment_id = self.kwargs.get('experiment_id')
@@ -52,6 +63,20 @@ class MeasurementListView(LoginRequiredMixin, ListView):
         
         if not context['selected_type'] and self.get_queryset().exists():
             context['selected_type'] = self.get_queryset().first().type
+        
+        # Get all measurements for the chart (not paginated)
+        experiment_id = self.kwargs.get('experiment_id')
+        measurement_type = self.request.GET.get('type')
+        chart_queryset = Measurement.objects.filter(experiment_id=experiment_id).order_by('-timestamp')
+        
+        if measurement_type:
+            chart_queryset = chart_queryset.filter(type=measurement_type)
+        elif Measurement.objects.filter(experiment_id=experiment_id).exists():
+            first_measurement = Measurement.objects.filter(experiment_id=experiment_id).first()
+            if first_measurement:
+                chart_queryset = chart_queryset.filter(type=first_measurement.type)
+                
+        context['chart_measurements'] = chart_queryset
             
         return context
 
