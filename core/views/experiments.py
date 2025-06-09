@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
+from django.db.models import Q
+from datetime import datetime
 from core.models import Experiment, Team, Membership
 from core.forms import ExperimentForm
 from .mixins import TeamRoleRequiredMixin
@@ -13,7 +15,32 @@ class ExperimentListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         team_id = self.kwargs.get('team_id')
-        return Experiment.objects.filter(team_id=team_id)
+        queryset = Experiment.objects.filter(team_id=team_id)
+        
+        # Filter by name
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+        
+        # Filter by date range
+        date_from = self.request.GET.get('date_from')
+        if date_from:
+            try:
+                date_from = datetime.strptime(date_from, '%Y-%m-%d')
+                queryset = queryset.filter(created_at__gte=date_from)
+            except ValueError:
+                pass
+        
+        date_to = self.request.GET.get('date_to')
+        if date_to:
+            try:
+                date_to = datetime.strptime(date_to, '%Y-%m-%d')
+                # Add one day to include the end date fully
+                queryset = queryset.filter(created_at__lte=date_to)
+            except ValueError:
+                pass
+            
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,6 +52,11 @@ class ExperimentListView(LoginRequiredMixin, ListView):
             team_id=self.kwargs.get('team_id')
         ).first()
         context['user_role'] = membership.role if membership else None
+        
+        # Add search and date filter parameters to context
+        context['search'] = self.request.GET.get('search', '')
+        context['date_from'] = self.request.GET.get('date_from', '')
+        context['date_to'] = self.request.GET.get('date_to', '')
         
         return context
 

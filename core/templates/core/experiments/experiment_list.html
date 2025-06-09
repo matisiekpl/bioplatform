@@ -30,6 +30,53 @@
     </div>
 </div>
 
+<div class="bg-white shadow overflow-hidden sm:rounded-md mb-6">
+    <div class="px-4 py-4 sm:px-6">
+        <form method="get" action="{% url 'experiment_list' team_id=team.id %}">
+            <div class="flex items-center">
+                <div class="flex-grow">
+                    <label for="search" class="sr-only">Szukaj eksperymentów</label>
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" name="search" id="search" value="{{ search }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border-2 outline outline-1 outline-gray-200 focus:outline-1 focus:outline-indigo-400" placeholder="Szukaj eksperymentów po nazwie">
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Szukaj
+                    </button>
+                </div>
+                {% if search or date_from or date_to %}
+                <div class="ml-3">
+                    <a href="{% url 'experiment_list' team_id=team.id %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Wyczyść
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-3 flex items-center gap-4">
+                <div>
+                    <label for="date_from" class="block text-sm font-medium text-gray-700">Od daty</label>
+                    <div class="mt-1">
+                        <input type="date" name="date_from" id="date_from" value="{{ date_from }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md border-2 outline outline-1 outline-gray-200 focus:outline-1 focus:outline-indigo-400 px-3 py-2">
+                    </div>
+                </div>
+                <div>
+                    <label for="date_to" class="block text-sm font-medium text-gray-700">Do daty</label>
+                    <div class="mt-1">
+                        <input type="date" name="date_to" id="date_to" value="{{ date_to }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md border-2 outline outline-1 outline-gray-200 focus:outline-1 focus:outline-indigo-400 px-3 py-2">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="bg-white shadow overflow-hidden sm:rounded-md">
     <ul class="divide-y divide-gray-200">
         {% for experiment in experiments %}
